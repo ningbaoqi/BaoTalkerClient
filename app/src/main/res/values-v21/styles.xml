@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--api在21以上使用-->
+<resources>
+    <style name="AppTheme.TransStatusBar" parent="AppTheme.TransStatusBar.Base">
+        <item name="android:statusBarColor">@null</item>
+    </style>
+</resources>

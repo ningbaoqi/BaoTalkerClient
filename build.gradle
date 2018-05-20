@@ -36,4 +36,12 @@ ext{
     supportVersion='27.1.1'
     //butterknife的版本号
     butterknifeVersion='8.4.0'
+
+    geniusVersion='2.0.0'
+    //图片加载框架版本
+    glideVersion='3.7.0'
+
+    circleimageviewVersion='2.2.0'
+
+    geniusVersion='2.0.1'
 }

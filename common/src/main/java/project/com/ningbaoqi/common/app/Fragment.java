@@ -13,9 +13,16 @@ import butterknife.Unbinder;
 
 /**
  * @author ningbaoqi
- * */
-public abstract class Fragment extends android.support.v4.app.Fragment{
-    protected View mRoot ;//复用问题
+ * Fragment操作区别
+ *      add：往容器中添加一个Fragment
+ *      replace：替换容器当中的一个Fragment，会将原来容器中的Fragment移除掉，即remove，然后将新的Fragment添加到容器中、
+ *      hide/show：存粹的隐藏与显示并不移除
+ *      attach/detach：从布局上移除，但存储到缓存队列中，不会被测量，但可重用
+ *      remove：直接移除掉，并不缓存
+ *
+ */
+public abstract class Fragment extends android.support.v4.app.Fragment {
+    protected View mRoot;//复用问题
     protected Unbinder mRootUnBinder;
 
     @Override
@@ -26,24 +33,25 @@ public abstract class Fragment extends android.support.v4.app.Fragment{
 
     /**
      * 初始化相关参数
+     *
      * @param bundle 参数Bundle
      * @return 如果参数正确返回true，错误返回false
      */
-    protected void initArgs(Bundle bundle){
+    protected void initArgs(Bundle bundle) {
 
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (mRoot == null){
+        if (mRoot == null) {
             int layId = getContentLayoutId();
-            View root = inflater.inflate(layId , container , false);//初始化当前的根布局，但是不在创建时就添加到container里面去，在return mRoot的时候，在Fragment的内部调用的时候，调度之后添加到container里面去
+            View root = inflater.inflate(layId, container, false);//初始化当前的根布局，但是不在创建时就添加到container里面去，在return mRoot的时候，在Fragment的内部调用的时候，调度之后添加到container里面去
             initWidget(root);
             mRoot = root;
-        }else {
-            if (mRoot.getParent()!= null){//判断该Rootview的父布局等不等于空 ，如果不等于空，将mRoot在    在调度之后在mRoot父布局中已经有了mRoot，如果Fragment被回收，重新初始化这个Fragment的时候，有可能mRoot还没有被回收
-                ((ViewGroup)mRoot.getParent()).removeView(mRoot);//把当前Root从其父控件中移除
+        } else {
+            if (mRoot.getParent() != null) {//判断该Rootview的父布局等不等于空 ，如果不等于空，将mRoot在    在调度之后在mRoot父布局中已经有了mRoot，如果Fragment被回收，重新初始化这个Fragment的时候，有可能mRoot还没有被回收
+                ((ViewGroup) mRoot.getParent()).removeView(mRoot);//把当前Root从其父控件中移除
             }
         }
         return mRoot;
@@ -51,6 +59,7 @@ public abstract class Fragment extends android.support.v4.app.Fragment{
 
     /**
      * 当界面初始化完成之后初始化数据
+     *
      * @param view
      * @param savedInstanceState
      */
@@ -62,6 +71,7 @@ public abstract class Fragment extends android.support.v4.app.Fragment{
 
     /**
      * 得到当前界面的资源文件Id
+     *
      * @return 资源ID
      */
     protected abstract int getContentLayoutId();
@@ -69,32 +79,33 @@ public abstract class Fragment extends android.support.v4.app.Fragment{
     /**
      *
      */
-    protected void initWindow(){
+    protected void initWindow() {
 
     }
 
     /**
      * 初始化控件
+     *
      * @param root
      */
-    protected void initWidget(View root){
-        mRootUnBinder = ButterKnife.bind(this , root);
+    protected void initWidget(View root) {
+        mRootUnBinder = ButterKnife.bind(this, root);
     }
 
     /**
      * 初始化数据
      */
-    protected void initData(){
+    protected void initData() {
 
 
     }
 
-
     /**
      * 返回按键触发时调用
+     *
      * @return true 代表我已处理返回逻辑，Activity不用关心不用finish自己了；false 表示我没有处理，acitivty自己走自己的逻辑
      */
-    public boolean onBackPress(){
+    public boolean onBackPress() {
         return false;
     }
 }
