@@ -8,84 +8,80 @@
     tools:context=".MainActivity">
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbar"
+        android:id="@+id/appBar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/actionBarWithStatusBarSize"
+        android:layout_height="85dp"
         android:elevation="@dimen/len_2"
         android:outlineProvider="bounds">
-        <!--帧布局的系统消耗很低-->
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/statusBarSize"
-            android:paddingLeft="@dimen/len_4"
-            android:paddingRight="@dimen/len_4">
+            android:layout_marginTop="20dp">
 
             <project.com.ningbaoqi.common.widget.a.PortraitView
-                android:id="@+id/im_portrait"
-                android:layout_width="@dimen/len_40"
-                android:layout_height="@dimen/len_40"
-                android:layout_margin="@dimen/len_4"
-                android:foreground="@drawable/ic_touch_menu"
-                android:padding="@dimen/len_4"
+                android:id="@+id/im_potrait"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/ic_touch_menu"
+                android:clickable="true"
+                android:padding="5dp"
                 android:scaleType="centerCrop"
-                android:src="@mipmap/default_portrait" />
+                android:src="@mipmap/default_portrait"
+                android:tint="@color/navIconTintLight" />
 
             <TextView
-                android:id="@+id/txt_title"
+                android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:text="@string/app_name"
-                android:textAppearance="@style/TextAppearance.Title" />
+                android:textColor="@color/white" />
 
             <ImageView
-                android:id="@+id/im_search"
-                android:layout_width="@dimen/len_40"
-                android:layout_height="@dimen/len_40"
-                android:layout_gravity="end|center"
-                android:layout_margin="@dimen/len_4"
-                android:contentDescription="@string/app_name"
-                android:foreground="@drawable/ic_touch_menu"
-                android:padding="@dimen/len_10"
+                android:id="@+id/search"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_margin="10dp"
+                android:background="@drawable/ic_touch_menu"
+                android:clickable="true"
+                android:padding="7dp"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_search"
-                android:tint="?attr/toolbarMenuIconColor" />
+                android:src="@drawable/ic_search" />
         </FrameLayout>
     </android.support.design.widget.AppBarLayout>
 
     <FrameLayout
-        android:id="@+id/lay_container"
+        android:id="@+id/layout_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/len_52"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"></FrameLayout>
+        android:layout_marginBottom="53dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/btn_action"
         android:layout_width="@dimen/len_52"
         android:layout_height="@dimen/len_52"
-        android:layout_marginBottom="@dimen/len_68"
-        android:layout_marginEnd="@dimen/len_16"
-        android:padding="@dimen/len_20"
+        android:layout_marginBottom="72dp"
+        android:layout_marginEnd="20dp"
+        android:padding="20dp"
         android:src="@drawable/ic_group_add"
         android:tint="@color/white"
-        app:backgroundTint="@color/colorAccent"
-        android:translationY="@dimen/len_76"
-        app:layout_anchor="@id/lay_container"
-        app:layout_anchorGravity="bottom|end" />
+        android:translationY="@dimen/len_72"
+        app:layout_anchor="@id/layout_container"
+        app:layout_anchorGravity="bottom|right" />
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/len_52"
+        android:layout_height="52dp"
         android:layout_gravity="bottom"
         android:background="@color/white"
         android:elevation="@dimen/len_4"
         android:outlineProvider="bounds"
         android:translationZ="@dimen/len_8"
-        app:itemIconTint="@color/text_nav"
-        app:itemTextColor="@color/text_nav"
         app:menu="@menu/navigation_items" />
 </android.support.design.widget.CoordinatorLayout>

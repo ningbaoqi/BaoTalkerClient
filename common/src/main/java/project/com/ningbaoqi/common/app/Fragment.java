@@ -14,12 +14,11 @@ import butterknife.Unbinder;
 /**
  * @author ningbaoqi
  * Fragment操作区别
- *      add：往容器中添加一个Fragment
- *      replace：替换容器当中的一个Fragment，会将原来容器中的Fragment移除掉，即remove，然后将新的Fragment添加到容器中、
- *      hide/show：存粹的隐藏与显示并不移除
- *      attach/detach：从布局上移除，但存储到缓存队列中，不会被测量，但可重用
- *      remove：直接移除掉，并不缓存
- *
+ * add：往容器中添加一个Fragment
+ * replace：替换容器当中的一个Fragment，会将原来容器中的Fragment移除掉，即remove，然后将新的Fragment添加到容器中、
+ * hide/show：存粹的隐藏与显示并不移除
+ * attach/detach：从布局上移除，但存储到缓存队列中，不会被测量，但可重用
+ * remove：直接移除掉，并不缓存
  */
 public abstract class Fragment extends android.support.v4.app.Fragment {
     protected View mRoot;//复用问题
@@ -75,13 +74,6 @@ public abstract class Fragment extends android.support.v4.app.Fragment {
      * @return 资源ID
      */
     protected abstract int getContentLayoutId();
-
-    /**
-     *
-     */
-    protected void initWindow() {
-
-    }
 
     /**
      * 初始化控件

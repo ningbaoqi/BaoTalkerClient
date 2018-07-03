@@ -1,10 +1,9 @@
 package project.com.ningbaoqi.baotalkerclient;
 
-import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,12 +16,11 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.ViewTarget;
 
-import net.qiujuer.genius.ui.Ui;
-
 import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import project.com.ningbaoqi.baotalkerclient.activities.AccountActivity;
 import project.com.ningbaoqi.baotalkerclient.fragment.main.ActiveFragment;
 import project.com.ningbaoqi.baotalkerclient.fragment.main.ContactFragment;
 import project.com.ningbaoqi.baotalkerclient.fragment.main.GroupFragment;
@@ -31,35 +29,37 @@ import project.com.ningbaoqi.common.app.Activity;
 import project.com.ningbaoqi.common.widget.a.PortraitView;
 
 public class MainActivity extends Activity implements BottomNavigationView.OnNavigationItemSelectedListener, NavHelper.OnTabChangedListener<Integer> {
-    @BindView(R.id.appbar)
-    View mLayAppBar;
-    @BindView(R.id.im_portrait)
-    PortraitView mPortrait;
-    @BindView(R.id.txt_title)
-    TextView mTitle;
-    @BindView(R.id.lay_container)
+    @BindView(R.id.appBar)
+    View mAppBar;
+    @BindView(R.id.im_potrait)
+    PortraitView portraitView;
+    @BindView(R.id.layout_container)
     FrameLayout mContainer;
     @BindView(R.id.navigation)
     BottomNavigationView mNavigation;
+    @BindView(R.id.tv_title)
+    TextView tvTitle;
     @BindView(R.id.btn_action)
-    FloatingActionButton mAction;
-    private NavHelper<Integer> mNavHalper;
+    FloatingActionButton mFloatingButton;
+    private NavHelper mNavHelper;
 
     @Override
     protected int getContentLayoutId() {
         return R.layout.activity_main;
     }
 
+    /**
+     * 使用Glide框架设置背景中间剪切
+     */
     @Override
     protected void initWidget() {
         super.initWidget();
-        mNavHalper = new NavHelper<>(this, R.id.lay_container, getSupportFragmentManager(), this);//初始化工具类
-        mNavHalper.add(R.id.action_home, new NavHelper.Tab<>(ActiveFragment.class, R.string.title_home))
-                .add(R.id.action_group, new NavHelper.Tab<>(GroupFragment.class, R.string.title_group))
-                .add(R.id.action_contact, new NavHelper.Tab<>(ContactFragment.class, R.string.title_contact));
-        mNavigation.setOnNavigationItemSelectedListener(this);
-        Glide.with(this).load(R.mipmap.bg_src_morning).centerCrop().into(new ViewTarget<View, GlideDrawable>(mLayAppBar) {
-            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+        mNavHelper = new NavHelper<>(this, R.id.layout_container, getSupportFragmentManager(), this);//初始化底部导航栏工具类
+        mNavHelper.addTab(R.id.action_home, new NavHelper.Tab<>(ActiveFragment.class, R.string.title_home))
+                .addTab(R.id.action_group, new NavHelper.Tab<>(GroupFragment.class, R.string.title_group))
+                .addTab(R.id.action_contact, new NavHelper.Tab<>(ContactFragment.class, R.string.title_contact));
+        mNavigation.setOnNavigationItemSelectedListener(this);//添加底部导航栏监听
+        Glide.with(this).load(R.mipmap.bg_src_morning).centerCrop().into(new ViewTarget<View, GlideDrawable>(mAppBar) {
             @Override
             public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
                 this.view.setBackground(resource.getCurrent());
@@ -70,56 +70,62 @@ public class MainActivity extends Activity implements BottomNavigationView.OnNav
     @Override
     protected void initData() {
         super.initData();
-        Menu menu = mNavigation.getMenu();//从底部导航中接管我们的Menu，然后进行手动的触发第一次点击
-        menu.performIdentifierAction(R.id.action_home, 0);//触发首次选中home
+        Menu menu = mNavigation.getMenu();//从底部导航中接管menu，然后手动的触发第一次点击
+        menu.performIdentifierAction(R.id.action_home, 0);//触发menu事件
     }
 
-    @OnClick(R.id.im_search)
-    public void onSearchMenuClick() {
-
+    @OnClick(R.id.search)
+    void onSearchMenuClick() {
     }
 
     @OnClick(R.id.btn_action)
-    public void onActionClick() {
-
+    void onActionClick() {
+        AccountActivity.show(this);
     }
 
     /**
-     * 当底部导航栏被点击的时候触发
+     * 当底部导航被点击的时候的回调方法
      *
      * @param item MenuItem
      * @return true 代表我们能够处理这个点击
      */
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        return mNavHalper.performClickMenu(item.getItemId());//转接事件流到工具类中
+        return mNavHelper.performClickMenu(item.getItemId());//转移事件流到工具类中
     }
 
     /**
-     * NavHelper 处理后回调的方法
+     * 当界面处理完成回调
      *
-     * @param newTab 新的Tab
-     * @param oldTab 旧的Tab
+     * @param newTab
+     * @param oldTab
      */
     @Override
     public void onTabChanged(NavHelper.Tab<Integer> newTab, NavHelper.Tab<Integer> oldTab) {
-        mTitle.setText(newTab.extra);//从额外字段中取出我们的title资源ID
-        /**
-         * 对浮动按钮进行隐藏与显示的动画
-         */
-        float translationY = 0;
-        float rotation = 0;
+        tvTitle.setText(newTab.extra);//从额外字段取出资源ID
+        startAnimation(newTab);
+    }
+
+    /**
+     * 启动浮动按钮动画
+     *
+     * @param newTab
+     */
+    private void startAnimation(NavHelper.Tab<Integer> newTab) {
+        Log.d("nbq", "listener" + newTab);
+        float rotation = 0f;
+        float translationY = 0f;
         if (Objects.equals(newTab.extra, R.string.title_home)) {
-            translationY = Ui.dipToPx(getResources() , 76);//主界面隐藏浮动按钮
+            translationY = 250f;
         } else {
             if (Objects.equals(newTab.extra, R.string.title_group)) {
-                mAction.setImageResource(R.drawable.ic_group_add);
-                rotation = -360;
+                mFloatingButton.setImageResource(R.drawable.ic_group_add);
+                rotation = -360f;
             } else {
-                mAction.setImageResource(R.drawable.ic_contact_add);
-                rotation = 360;
+                mFloatingButton.setImageResource(R.drawable.ic_contact_add);
+                rotation = 360f;
             }
         }
-        mAction.animate().rotation(rotation).translationY(translationY).setDuration(480).setInterpolator(new AnticipateOvershootInterpolator()).start();//设置弹性效果插值器
+        mFloatingButton.animate().rotation(rotation).translationY(translationY).setInterpolator(new AnticipateOvershootInterpolator(1)).setDuration(480).start();
     }
 }

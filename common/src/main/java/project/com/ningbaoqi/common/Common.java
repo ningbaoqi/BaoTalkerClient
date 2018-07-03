@@ -1,8 +1,8 @@
 package project.com.ningbaoqi.common;
-/**
- * @author  ningbaoqi
- * */
 
+/**
+ * @author ningbaoqi
+ */
 public class Common {
 
 }

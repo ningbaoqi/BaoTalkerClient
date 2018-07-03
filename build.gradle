@@ -1,7 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    
+
     repositories {
         apply plugin: 'maven'
         google()
@@ -20,6 +20,8 @@ allprojects {
     repositories {
         google()
         jcenter()
+        mavenCentral()
+        maven { url "https://jitpack.io" }
     }
 }
 
@@ -27,21 +29,25 @@ allprojects {
 //    delete rootProject.buildDir
 //}
 
-ext{
+ext {
     //版本号相关
-    versionCode=1
-    versionName='1.0.0'
+    versionCode = 1
+    versionName = '1.0.0'
 
     //项目依赖库版本
-    supportVersion='27.1.1'
+    supportVersion = '27.1.1'
     //butterknife的版本号
-    butterknifeVersion='8.4.0'
+    butterknifeVersion = '8.4.0'
 
-    geniusVersion='2.0.0'
+    geniusVersion = '2.0.0'
     //图片加载框架版本
-    glideVersion='3.7.0'
+    glideVersion = '3.7.0'
 
-    circleimageviewVersion='2.2.0'
+    circleimageviewVersion = '2.2.0'
 
-    geniusVersion='2.0.1'
+    geniusVersion = '2.0.1'
+    ucropVersion = "2.2.2-native"
+
+    easyPMVersion = "0.3.0"
+    ossVersion = '2.3.0'
 }
