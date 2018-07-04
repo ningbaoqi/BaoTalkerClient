@@ -5,10 +5,4 @@
     android:layout_height="match_parent"
     tools:context=".fragment.main.ActiveFragment">
 
-    <project.com.ningbaoqi.common.widget.a.GalleryView
-        android:id="@+id/gallery"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="1dp"></project.com.ningbaoqi.common.widget.a.GalleryView>
-
 </FrameLayout>

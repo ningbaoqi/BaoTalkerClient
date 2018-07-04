@@ -1,5 +1,7 @@
-package project.com.ningbaoqi.baotalkerclient;
+package project.com.ningbaoqi.baotalkerclient.activities;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
@@ -20,7 +22,8 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import project.com.ningbaoqi.baotalkerclient.activities.AccountActivity;
+import project.com.ningbaoqi.baotalkerclient.R;
+import project.com.ningbaoqi.baotalkerclient.fragment.assist.PermissionsFragment;
 import project.com.ningbaoqi.baotalkerclient.fragment.main.ActiveFragment;
 import project.com.ningbaoqi.baotalkerclient.fragment.main.ContactFragment;
 import project.com.ningbaoqi.baotalkerclient.fragment.main.GroupFragment;
@@ -42,6 +45,15 @@ public class MainActivity extends Activity implements BottomNavigationView.OnNav
     @BindView(R.id.btn_action)
     FloatingActionButton mFloatingButton;
     private NavHelper mNavHelper;
+
+    /**
+     * MainActivity显示的入口
+     *
+     * @param context 上下文
+     */
+    public static void show(Context context) {
+        context.startActivity(new Intent(context, MainActivity.class));
+    }
 
     @Override
     protected int getContentLayoutId() {
