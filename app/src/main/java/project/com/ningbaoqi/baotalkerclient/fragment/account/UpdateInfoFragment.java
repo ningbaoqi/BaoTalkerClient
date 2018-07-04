@@ -3,9 +3,12 @@ package project.com.ningbaoqi.baotalkerclient.fragment.account;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.util.Log;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
+import com.dashen.ningbaoqi.factory.Factory;
+import com.dashen.ningbaoqi.factory.net.UploadHelper;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
@@ -67,8 +70,22 @@ public class UpdateInfoFragment extends Fragment {
             final Throwable cropError = UCrop.getError(data);
         }
     }
-    
+
+    /**
+     * 将截取的图片放在指定的控件中并且上传到OSS服务器上
+     *
+     * @param uri
+     */
     private void loadPortrait(Uri uri) {
         Glide.with(this).load(uri).asBitmap().centerCrop().into(mPortrait);//将剪切得到的Uri设置到头像
+        final String localPath = uri.getPath();//获取本地文件的地址
+        Log.d("nbq", "localPath=========" + localPath);
+        Factory.runOnAsync(new Runnable() {
+            @Override
+            public void run() {
+                String url = UploadHelper.uploadPortrait(localPath);
+                Log.d("nbq", "result url ========" + url);
+            }
+        });
     }
 }
