@@ -19,7 +19,7 @@
             app:titleTextAppearance="@style/TextAppearance.AppCompat.Medium"
             app:titleTextColor="@color/textPrimary" />
     </android.support.design.widget.AppBarLayout>
-
+    <!--android:clipToPadding="false" 将padding也作为内容一起滚动-->
     <project.com.ningbaoqi.common.widget.a.GalleryView
         android:id="@+id/galleryView"
         android:layout_width="match_parent"

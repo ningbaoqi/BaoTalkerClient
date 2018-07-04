@@ -2,9 +2,6 @@ package project.com.ningbaoqi.baotalkerclient.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
-
-import com.yalantis.ucrop.UCrop;
 
 import project.com.ningbaoqi.baotalkerclient.R;
 import project.com.ningbaoqi.baotalkerclient.fragment.account.UpdateInfoFragment;
@@ -35,6 +32,13 @@ public class AccountActivity extends Activity {
         getSupportFragmentManager().beginTransaction().add(R.id.layout_container, mFragment).commit();
     }
 
+    /**
+     * Activity中收到图片剪切的回调
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         mFragment.onActivityResult(requestCode, resultCode, data);
