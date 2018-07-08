@@ -1,10 +1,9 @@
-package project.com.ningbaoqi.baotalkerclient.fragment.account;
+package project.com.ningbaoqi.baotalkerclient.fragment.user;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.Log;
-import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.dashen.ningbaoqi.factory.Factory;
