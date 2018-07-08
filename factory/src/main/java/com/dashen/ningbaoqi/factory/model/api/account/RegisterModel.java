@@ -1,4 +1,4 @@
-package com.dashen.ningbaoqi.factory.model.api;
+package com.dashen.ningbaoqi.factory.model.api.account;
 
 /**
  * 注册使用的请求Model
