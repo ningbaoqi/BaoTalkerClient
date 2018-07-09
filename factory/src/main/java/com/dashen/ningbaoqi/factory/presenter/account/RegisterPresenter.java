@@ -16,7 +16,7 @@ import project.com.ningbaoqi.common.Common;
 import project.com.ningbaoqi.factory.data.DataSource;
 import project.com.ningbaoqi.factory.presenter.BasePresenter;
 
-public class RegisterPresenter extends BasePresenter<RegisterContract.View> implements RegisterContract.Presenter, DataSource.Callack<User> {
+public class RegisterPresenter extends BasePresenter<RegisterContract.View> implements RegisterContract.Presenter, DataSource.Callback<User> {
     public RegisterPresenter(RegisterContract.View view) {
         super(view);
     }

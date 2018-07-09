@@ -12,7 +12,7 @@ public interface DataSource {
      *
      * @param <T> 泛型 任意类型
      */
-    interface Callack<T> extends SucceedCallback<T>, FailedCallback {
+    interface Callback<T> extends SucceedCallback<T>, FailedCallback {
 
     }
 
