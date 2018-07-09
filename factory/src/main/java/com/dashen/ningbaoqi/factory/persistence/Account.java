@@ -2,6 +2,7 @@ package com.dashen.ningbaoqi.factory.persistence;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.StringRes;
 import android.text.TextUtils;
 
 import com.dashen.ningbaoqi.factory.Factory;
@@ -28,7 +29,13 @@ public class Account {
      */
     private static void save(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(Account.class.getName(), Context.MODE_PRIVATE);
-        sharedPreferences.edit().putString(KEY_PUSH_ID, pushId).putBoolean(KEY_IS_BIDN, isBind).apply();//apply是一个异步操作，commit是同步的
+        sharedPreferences.edit()
+                .putString(KEY_PUSH_ID, pushId)
+                .putBoolean(KEY_IS_BIDN, isBind)
+                .putString(KEY_TOKEN, token)
+                .putString(KEY_USER_ID, userId)
+                .putString(KEY_ACCOUNT, account)
+                .apply();//apply是一个异步操作，commit是同步的
     }
 
     /**
@@ -40,6 +47,9 @@ public class Account {
         SharedPreferences sharedPreferences = context.getSharedPreferences(Account.class.getName(), Context.MODE_PRIVATE);
         pushId = sharedPreferences.getString(KEY_PUSH_ID, "");
         isBind = sharedPreferences.getBoolean(KEY_IS_BIDN, false);
+        token = sharedPreferences.getString(KEY_TOKEN, "");
+        userId = sharedPreferences.getString(KEY_USER_ID, "");
+        account = sharedPreferences.getString(KEY_ACCOUNT, "");
     }
 
 
@@ -122,5 +132,14 @@ public class Account {
      */
     public static User getUser() {
         return !TextUtils.isEmpty(userId) ? new User() : SQLite.select().from(User.class).where(User_Table.id.eq(userId)).querySingle();//在数据库中查询
+    }
+
+    /**
+     * 获取当前登录的token
+     *
+     * @return token
+     */
+    public static String getToken() {
+        return token;
     }
 }

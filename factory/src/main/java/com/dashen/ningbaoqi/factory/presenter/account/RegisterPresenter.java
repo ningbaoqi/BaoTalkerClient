@@ -6,6 +6,7 @@ import com.dashen.ningbaoqi.factory.R;
 import com.dashen.ningbaoqi.factory.data.helper.AccountHelper;
 import com.dashen.ningbaoqi.factory.model.api.account.RegisterModel;
 import com.dashen.ningbaoqi.factory.model.db.User;
+import com.dashen.ningbaoqi.factory.persistence.Account;
 
 import net.qiujuer.genius.kit.handler.Run;
 import net.qiujuer.genius.kit.handler.runable.Action;
@@ -38,7 +39,7 @@ public class RegisterPresenter extends BasePresenter<RegisterContract.View> impl
         } else if (password.length() < 6) {//密码需要大于六位
             view.showError(R.string.data_account_register_invalid_parameter_password);
         } else {//进行网络请求
-            RegisterModel model = new RegisterModel(phone, password, name);//构造Model进行请求调用
+            RegisterModel model = new RegisterModel(phone, password, name, Account.getPushId());//构造Model进行请求调用
             AccountHelper.register(model, this);//进行网络请求并设置回调接口
         }
     }
