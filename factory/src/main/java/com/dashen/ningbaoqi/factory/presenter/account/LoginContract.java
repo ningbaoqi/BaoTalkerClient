@@ -8,6 +8,6 @@ public interface LoginContract {
     }
 
     interface Presenter extends BaseContract.Presenter {
-        void login(String phone, String name, String password);//发起一个登陆
+        void login(String phone, String password);//发起一个登陆
     }
 }
