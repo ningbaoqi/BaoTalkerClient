@@ -1,5 +1,6 @@
 package com.dashen.ningbaoqi.factory.data.helper;
 
+import com.dashen.ningbaoqi.factory.Factory;
 import com.dashen.ningbaoqi.factory.R;
 import com.dashen.ningbaoqi.factory.model.api.RspModel;
 import com.dashen.ningbaoqi.factory.model.api.account.AccountRspModel;
@@ -47,8 +48,7 @@ public class AccountHelper {
                     }
 
                 } else {
-                    // TODO 请求失败了，对返回的RspModel中的失败的Code进行解析，解析到对应的String资源上面
-                    //callback.onDataNotAvailable();
+                    Factory.decodeRspCode(rspModel, callback);//错误解析
                 }
             }
 
@@ -70,6 +70,6 @@ public class AccountHelper {
      * @param callback
      */
     public static void bindPush(final DataSource.Callback<User> callback) {
-
+        callback.onDataNotAvailable(R.string.app_name);//暂时抛出一个错误
     }
 }
