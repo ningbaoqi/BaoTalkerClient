@@ -8,6 +8,7 @@ import com.dashen.ningbaoqi.factory.model.api.account.RegisterModel;
 import com.dashen.ningbaoqi.factory.model.db.User;
 import com.dashen.ningbaoqi.factory.net.NetWork;
 import com.dashen.ningbaoqi.factory.net.RemoteService;
+import com.dashen.ningbaoqi.factory.persistence.Account;
 
 import project.com.ningbaoqi.factory.data.DataSource;
 import retrofit2.Call;
@@ -70,6 +71,6 @@ public class AccountHelper {
      * @param callback
      */
     public static void bindPush(final DataSource.Callback<User> callback) {
-        callback.onDataNotAvailable(R.string.app_name);//暂时抛出一个错误
+        Account.setBind(true);
     }
 }

@@ -7,14 +7,16 @@ import com.dashen.ningbaoqi.factory.Factory;
 
 public class Account {
     private static final String KEY_PUSH_ID = "KEY_PUSH_ID";
+    private static final String KEY_IS_BIDN = "KEY_IS_BIDN";
     private static String pushId;//设备的推送ID
+    private static boolean isBind;//设备ID是否已经绑定到了服务器
 
     /**
      * 存储数据到XML文件，持久化
      */
     private static void save(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(Account.class.getName(), Context.MODE_PRIVATE);
-        sharedPreferences.edit().putString(KEY_PUSH_ID, pushId).apply();//apply是一个异步操作，commit是同步的
+        sharedPreferences.edit().putString(KEY_PUSH_ID, pushId).putBoolean(KEY_IS_BIDN, isBind).apply();//apply是一个异步操作，commit是同步的
     }
 
     /**
@@ -25,6 +27,7 @@ public class Account {
     public static void load(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(Account.class.getName(), Context.MODE_PRIVATE);
         pushId = sharedPreferences.getString(KEY_PUSH_ID, "");
+        isBind = sharedPreferences.getBoolean(KEY_IS_BIDN, false);
     }
 
 
@@ -63,6 +66,17 @@ public class Account {
      * @return 返回绑定状态
      */
     public static boolean isBind() {
-        return false;
+        return isBind;
+    }
+
+
+    /**
+     * 设置绑定状态
+     *
+     * @param isBind
+     */
+    public static void setBind(boolean isBind) {
+        Account.isBind = isBind;
+        Account.save(Factory.app());
     }
 }
