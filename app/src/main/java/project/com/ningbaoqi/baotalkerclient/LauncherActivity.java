@@ -8,6 +8,7 @@ import android.annotation.SuppressLint;
 import android.graphics.drawable.ColorDrawable;
 import android.support.graphics.drawable.ArgbEvaluator;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Property;
 import android.view.View;
 
@@ -16,6 +17,7 @@ import com.dashen.ningbaoqi.factory.persistence.Account;
 import net.qiujuer.genius.res.Resource;
 import net.qiujuer.genius.ui.compat.UiCompat;
 
+import project.com.ningbaoqi.baotalkerclient.activities.AccountActivity;
 import project.com.ningbaoqi.baotalkerclient.activities.MainActivity;
 import project.com.ningbaoqi.baotalkerclient.fragment.assist.PermissionsFragment;
 import project.com.ningbaoqi.common.app.Activity;
@@ -56,9 +58,16 @@ public class LauncherActivity extends Activity {
      * 等待个推框架对我们的PushId设置好值
      */
     private void waitPushReceiverId() {
-        if (!TextUtils.isEmpty(Account.getPushId())) {//如果拿到了:就进行跳转
-            skip();
-            return;
+        if (Account.isLogin()) {//如果已经进行了登录
+            if (Account.isBind()) {//已经登录判断是否已经绑定到服务器；如果没有绑定则等待广播接收器进行绑定
+                skip();
+                return;
+            }
+        } else {//没有登录,没有登录的情况下是不能绑定PushID的
+            if (!TextUtils.isEmpty(Account.getPushId())) {//如果拿到了:就进行跳转
+                skip();
+                return;
+            }
         }
         getWindow().getDecorView().postDelayed(new Runnable() {// 循环等待
             @Override
@@ -85,7 +94,12 @@ public class LauncherActivity extends Activity {
      */
     private void reallySkip() {
         if (PermissionsFragment.haveAll(LauncherActivity.this, getSupportFragmentManager())) {
-            MainActivity.show(LauncherActivity.this);
+            //检查跳转到主页还是登录页面
+            if (Account.isLogin()) {
+                MainActivity.show(LauncherActivity.this);
+            } else {
+                AccountActivity.show(LauncherActivity.this);
+            }
             finish();
         }
     }

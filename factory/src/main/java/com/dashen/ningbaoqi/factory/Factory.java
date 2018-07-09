@@ -1,6 +1,7 @@
 package com.dashen.ningbaoqi.factory;
 
 import com.dashen.ningbaoqi.factory.model.api.RspModel;
+import com.dashen.ningbaoqi.factory.persistence.Account;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -26,6 +27,13 @@ public class Factory {
 //                // TODO 设置一个过滤器，数据库级别的Model不进行Json转换
 //                .setExclusionStrategies()
                 .create();
+    }
+
+    /**
+     * Factory中初始化
+     */
+    public static void setUp() {
+        Account.load(app());//对持久化的数据进行初始化
     }
 
     /**
@@ -131,5 +139,14 @@ public class Factory {
      */
     private void logout() {
 
+    }
+
+    /**
+     * 处理推送来的消息
+     *
+     * @param message
+     */
+    public static void dispatchPush(String message) {
+        // TODO
     }
 }
