@@ -9,6 +9,6 @@ public class Common {
      */
     public interface Constance {
         String REGEX_MOBILE = "[1][3,4,5,7,8][0-9]{9}$";//手机号的正则表达式;检测十一位手机号
-        String API_URL = "http://IP:8080/api/";//基础的网络请求地址；服务器的IP地址
+        String API_URL = "http://192.168.188.8:8080/api/";//基础的网络请求地址；服务器的IP地址
     }
 }
