@@ -13,6 +13,13 @@ android {
                 cppFlags ""
             }
         }
+        //个推相关参数
+        manifestPlaceholders = [
+                GETUI_APP_ID    : "s8xZn1ZMqZ6mr6py5FV7d9",
+                GETUI_APP_KEY   : "CzaBAAvAM87PQkuRFsiga6",
+                GETUI_APP_SECRET: "ijAnGOXDOc5ya8iqcPPIZ7",
+                PACKAGE_NAME    : applicationId
+        ]
     }
     buildTypes {
         release {
@@ -46,4 +53,5 @@ dependencies {
     implementation "com.android.support:recyclerview-v7:$rootProject.ext.supportVersion"
     implementation 'com.yalantis:ucrop:2.2.0-native'
     implementation "pub.devrel:easypermissions:$rootProject.ext.easyPMVersion"//谷歌提高的动态获取权限的包
+    implementation "com.getui:sdk:$rootProject.ext.getuiVersion"
 }
