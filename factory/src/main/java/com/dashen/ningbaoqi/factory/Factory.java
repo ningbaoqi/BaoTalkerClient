@@ -2,8 +2,11 @@ package com.dashen.ningbaoqi.factory;
 
 import com.dashen.ningbaoqi.factory.model.api.RspModel;
 import com.dashen.ningbaoqi.factory.persistence.Account;
+import com.dashen.ningbaoqi.factory.utils.DBFlowExclusionStrategy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.raizlabs.android.dbflow.config.FlowConfig;
+import com.raizlabs.android.dbflow.config.FlowManager;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -24,8 +27,7 @@ public class Factory {
         executor = Executors.newFixedThreadPool(4);//新建一个4个线程的线程池
         gson = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")//设置时间格式
-//                // TODO 设置一个过滤器，数据库级别的Model不进行Json转换
-//                .setExclusionStrategies()
+                .setExclusionStrategies(new DBFlowExclusionStrategy())//设置一个过滤器，数据库级别的Model不进行Json转换
                 .create();
     }
 
@@ -33,6 +35,7 @@ public class Factory {
      * Factory中初始化
      */
     public static void setUp() {
+        FlowManager.init(new FlowConfig.Builder(app()).openDatabasesOnInit(true).build());//数据库初始化的时候就开始打开数据库
         Account.load(app());//对持久化的数据进行初始化
     }
 

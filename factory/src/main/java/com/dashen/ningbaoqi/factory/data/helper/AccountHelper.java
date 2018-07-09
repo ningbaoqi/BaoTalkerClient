@@ -5,10 +5,15 @@ import com.dashen.ningbaoqi.factory.R;
 import com.dashen.ningbaoqi.factory.model.api.RspModel;
 import com.dashen.ningbaoqi.factory.model.api.account.AccountRspModel;
 import com.dashen.ningbaoqi.factory.model.api.account.RegisterModel;
+import com.dashen.ningbaoqi.factory.model.db.AppDatabase;
 import com.dashen.ningbaoqi.factory.model.db.User;
 import com.dashen.ningbaoqi.factory.net.NetWork;
 import com.dashen.ningbaoqi.factory.net.RemoteService;
 import com.dashen.ningbaoqi.factory.persistence.Account;
+import com.raizlabs.android.dbflow.config.DatabaseDefinition;
+import com.raizlabs.android.dbflow.config.FlowManager;
+import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
+import com.raizlabs.android.dbflow.structure.database.transaction.ITransaction;
 
 import project.com.ningbaoqi.factory.data.DataSource;
 import retrofit2.Call;
@@ -40,14 +45,23 @@ public class AccountHelper {
                 RspModel<AccountRspModel> rspModel = response.body();//从返回中得到我们的全局Model，内部是使用的Gson进行解析
                 if (rspModel.success()) {//如果是成功的请求
                     AccountRspModel accountRspModel = rspModel.getResult();//拿到实体
+                    final User user = accountRspModel.getUser();
+                    user.save();//第一种;直接保存
+                            /*FlowManager.getModelAdapter(User.class).save(user);//第二种通过ModelAdapter保存
+                            //第三种是放在事务中
+                            DatabaseDefinition definition = FlowManager.getDatabase(AppDatabase.class);
+                            definition.beginTransactionAsync(new ITransaction() {
+                                @Override
+                                public void execute(DatabaseWrapper databaseWrapper) {
+                                    FlowManager.getModelAdapter(User.class).save(user);//第二种通过ModelAdapter保存
+                                }
+                            }).build().execute();*/
+                    Account.login(accountRspModel);//同步到xml持久化文件中
                     if (accountRspModel.isBind()) {//如果是绑定状态，是否绑定设备
-                        User user = accountRspModel.getUser();
-                        // TODO 进行的是数据库写入和缓存绑定；然后返回
                         callback.onDataLoaded(user);
                     } else {//如果没有绑定好设备；要进行绑定设备
                         bindPush(callback);
                     }
-
                 } else {
                     Factory.decodeRspCode(rspModel, callback);//错误解析
                 }

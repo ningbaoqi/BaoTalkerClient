@@ -2,14 +2,26 @@ package com.dashen.ningbaoqi.factory.persistence;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 
 import com.dashen.ningbaoqi.factory.Factory;
+import com.dashen.ningbaoqi.factory.model.api.account.AccountRspModel;
+import com.dashen.ningbaoqi.factory.model.db.User;
+import com.dashen.ningbaoqi.factory.model.db.User_Table;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 public class Account {
     private static final String KEY_PUSH_ID = "KEY_PUSH_ID";
     private static final String KEY_IS_BIDN = "KEY_IS_BIDN";
+    private static final String KEY_TOKEN = "KEY_TOKEN";
+    private static final String KEY_USER_ID = "KEY_USER_ID";
+    private static final String KEY_ACCOUNT = "KEY_ACCOUNT";
+
     private static String pushId;//设备的推送ID
     private static boolean isBind;//设备ID是否已经绑定到了服务器
+    private static String token;//登录状态的token，用来接口请求
+    private static String userId;//登录的用户ID
+    private static String account;//登录的账户
 
     /**
      * 存储数据到XML文件，持久化
@@ -57,7 +69,17 @@ public class Account {
      * @return 是否登录的状态
      */
     public static boolean isLogin() {
-        return true;
+        return !TextUtils.isEmpty(userId) && !TextUtils.isEmpty(token);//用户ID和token不为空
+    }
+
+    /**
+     * 是否已经完善了用户信息
+     *
+     * @return true 完成了
+     */
+    public static boolean isComplete() {
+        // TODO
+        return isLogin();
     }
 
     /**
@@ -78,5 +100,27 @@ public class Account {
     public static void setBind(boolean isBind) {
         Account.isBind = isBind;
         Account.save(Factory.app());
+    }
+
+    /**
+     * 保存我自己的信息到持久化XML中
+     *
+     * @param model model
+     */
+    public static void login(AccountRspModel model) {
+        //存储当前登录的账户 token，用户ID，当便从数据库中查询我的信息
+        Account.token = model.getToken();
+        Account.account = model.getAccount();
+        Account.userId = model.getUser().getId();
+        Account.save(Factory.app());
+    }
+
+    /**
+     * 从数据库当中去查询
+     *
+     * @return
+     */
+    public static User getUser() {
+        return !TextUtils.isEmpty(userId) ? new User() : SQLite.select().from(User.class).where(User_Table.id.eq(userId)).querySingle();//在数据库中查询
     }
 }
