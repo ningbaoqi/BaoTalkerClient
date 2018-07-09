@@ -16,7 +16,18 @@ public class AccountHelper {
      * @param model   传递一个注册的Model进来
      * @param callack 成功与失败的接口回送
      */
-    public static void register(RegisterModel model, DataSource.Callack<User> callack) {
-
+    public static void register(RegisterModel model, final DataSource.Callack<User> callack) {
+        new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                callack.onDataNotAvailable(com.example.lang.R.string.data_rsp_error_parameters);
+            }
+        }.start();
     }
 }

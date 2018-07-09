@@ -7,6 +7,9 @@ import com.dashen.ningbaoqi.factory.data.helper.AccountHelper;
 import com.dashen.ningbaoqi.factory.model.api.account.RegisterModel;
 import com.dashen.ningbaoqi.factory.model.db.User;
 
+import net.qiujuer.genius.kit.handler.Run;
+import net.qiujuer.genius.kit.handler.runable.Action;
+
 import java.util.regex.Pattern;
 
 import project.com.ningbaoqi.common.Common;
@@ -62,15 +65,31 @@ public class RegisterPresenter extends BasePresenter<RegisterContract.View> impl
         if (view == null) {
             return;
         }
-        //此时是从网络回送回来的，并不保证处于主线程状态
-
+        //此时是从网络回送回来的，并不保证处于主线程状态;强制执行在主线程当中
+        Run.onUiAsync(new Action() {
+            @Override
+            public void call() {
+                view.registerSuccess();//调用主界面注册成功
+            }
+        });
     }
 
     /**
+     * 网络请求告知注册失败
+     *
      * @param strRes
      */
     @Override
-    public void onDataNotAvailable(int strRes) {
-
+    public void onDataNotAvailable(final int strRes) {
+        final RegisterContract.View view = getView();
+        if (view == null) {
+            return;
+        }
+        Run.onUiAsync(new Action() {
+            @Override
+            public void call() {
+                view.showError(strRes);
+            }
+        });
     }
 }

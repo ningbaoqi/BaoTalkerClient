@@ -47,7 +47,7 @@ public class AccountActivity extends Activity implements AccountTrigger {
     protected void initWidget() {
         super.initWidget();
         //初始化Fragment
-        mCurFragment = new LoginFragment();
+        mCurFragment = new RegisterFragment();
         getSupportFragmentManager().beginTransaction().add(R.id.layout_container, mCurFragment).commit();
 
         //初始化背景
