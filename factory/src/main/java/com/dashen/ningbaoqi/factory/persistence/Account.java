@@ -2,7 +2,6 @@ package com.dashen.ningbaoqi.factory.persistence;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.annotation.StringRes;
 import android.text.TextUtils;
 
 import com.dashen.ningbaoqi.factory.Factory;
@@ -88,8 +87,11 @@ public class Account {
      * @return true 完成了
      */
     public static boolean isComplete() {
-        // TODO
-        return isLogin();
+        if (isLogin()) {//首先保证登录成功
+            User self = getUser();
+            return !TextUtils.isEmpty(self.getDesc()) && !TextUtils.isEmpty(self.getPortrait()) && self.getSex() != 0;
+        }
+        return false;//未登录返回信息不完全
     }
 
     /**

@@ -2,6 +2,7 @@ package project.com.ningbaoqi.baotalkerclient.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
@@ -17,6 +18,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.ViewTarget;
+import com.dashen.ningbaoqi.factory.model.db.User;
+import com.dashen.ningbaoqi.factory.persistence.Account;
 
 import java.util.Objects;
 
@@ -53,6 +56,16 @@ public class MainActivity extends Activity implements BottomNavigationView.OnNav
      */
     public static void show(Context context) {
         context.startActivity(new Intent(context, MainActivity.class));
+    }
+
+    @Override
+    protected boolean initArgs(Bundle bundle) {
+        if (Account.isComplete()) {
+            return super.initArgs(bundle);//判断用户信息是否完全，完全则走正常流程
+        } else {
+            UserActivity.show(this);
+            return false;
+        }
     }
 
     @Override

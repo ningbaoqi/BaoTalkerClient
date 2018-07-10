@@ -48,6 +48,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
+        <activity
+            android:name=".activities.UserActivity"
+            android:label="UserActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
         <!--个推广播接收器-->
         <receiver
             android:name=".MessageReceiver"

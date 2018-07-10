@@ -2,22 +2,29 @@ package project.com.ningbaoqi.baotalkerclient.fragment.user;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.util.Log;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.dashen.ningbaoqi.factory.Factory;
-import com.dashen.ningbaoqi.factory.net.UploadHelper;
+import com.dashen.ningbaoqi.factory.presenter.user.UpdateInfoPresenter;
+import com.dashen.ningbaoqi.factory.presenter.user.UpdateInfoContract;
 import com.yalantis.ucrop.UCrop;
+
+
+import net.qiujuer.genius.ui.widget.Loading;
 
 import java.io.File;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import project.com.ningbaoqi.baotalkerclient.R;
+import project.com.ningbaoqi.baotalkerclient.activities.MainActivity;
 import project.com.ningbaoqi.baotalkerclient.fragment.media.GalleryFragment;
 import project.com.ningbaoqi.common.app.Application;
-import project.com.ningbaoqi.common.app.Fragment;
+import project.com.ningbaoqi.common.app.PresenterFragment;
 import project.com.ningbaoqi.common.widget.a.PortraitView;
 
 import static android.app.Activity.RESULT_OK;
@@ -25,9 +32,19 @@ import static android.app.Activity.RESULT_OK;
 /**
  * 用户更新信息的界面
  */
-public class UpdateInfoFragment extends Fragment {
+public class UpdateInfoFragment extends PresenterFragment<UpdateInfoContract.Presenter> implements UpdateInfoContract.View {
     @BindView(R.id.im_portrait)
     PortraitView mPortrait;
+    @BindView(R.id.im_sex)
+    ImageView mSex;
+    @BindView(R.id.edit_desc)
+    EditText mDesc;
+    @BindView(R.id.loading)
+    Loading mLoading;
+    @BindView(R.id.btn_submit)
+    Button mSubmit;
+    private String mPortraitPath;//头像的本地路径
+    private boolean isMan = true;
 
     @Override
     protected int getContentLayoutId() {
@@ -66,7 +83,7 @@ public class UpdateInfoFragment extends Fragment {
                 loadPortrait(resultUri);
             }
         } else if (resultCode == UCrop.RESULT_ERROR) {
-            final Throwable cropError = UCrop.getError(data);
+            Application.showToast(R.string.data_rsp_error_unknown);
         }
     }
 
@@ -76,15 +93,67 @@ public class UpdateInfoFragment extends Fragment {
      * @param uri
      */
     private void loadPortrait(Uri uri) {
+        mPortraitPath = uri.getPath();//得到头像地址
         Glide.with(this).load(uri).asBitmap().centerCrop().into(mPortrait);//将剪切得到的Uri设置到头像
-        final String localPath = uri.getPath();//获取本地文件的地址
-        Log.d("nbq", "localPath=========" + localPath);
-        Factory.runOnAsync(new Runnable() {
-            @Override
-            public void run() {
-                String url = UploadHelper.uploadPortrait(localPath);
-                Log.d("nbq", "result url ========" + url);
-            }
-        });
+    }
+
+    @OnClick(R.id.im_sex)
+    void onSexClick() {//性别图片点击的时候触发
+        isMan = !isMan;
+        Drawable drawable = getResources().getDrawable(isMan ? R.drawable.ic_sex_man : R.drawable.ic_sex_woman);
+        mSex.setImageDrawable(drawable);
+        mSex.getBackground().setLevel(isMan ? 0 : 1);//设置背景的层级切换颜色
+    }
+
+    @OnClick(R.id.btn_submit)
+    void onSubmitClick() {
+        String desc = mDesc.getText().toString();
+        mPresenter.update(mPortraitPath, desc, isMan);
+    }
+
+    /**
+     * 注册错误的时候调用
+     *
+     * @param str
+     */
+    @Override
+    public void showError(int str) {
+        super.showError(str);
+        //当提示需要显示错误的时候触发；一定是结束了
+        mLoading.stop();//停止Loading
+        mDesc.setEnabled(true);//让控件可以输入
+        mPortrait.setEnabled(true);
+        mSex.setEnabled(true);
+        mSubmit.setEnabled(true);//提交按钮可以继续点击
+    }
+
+    /**
+     * 正在加载的时候回调
+     */
+    @Override
+    public void showLoading() {
+        super.showLoading();
+        //正在进行时，界面不可操作
+        mLoading.start();//开始Loading
+        mDesc.setEnabled(false);
+        mPortrait.setEnabled(false);
+        mSex.setEnabled(false);
+        mSubmit.setEnabled(false);
+    }
+
+    @Override
+    public void updateSucceed() {
+        MainActivity.show(getContext());
+        getActivity().finish();
+    }
+
+    /**
+     * 初始化presenter
+     *
+     * @return
+     */
+    @Override
+    protected UpdateInfoContract.Presenter initPresenter() {
+        return new UpdateInfoPresenter(this);
     }
 }
