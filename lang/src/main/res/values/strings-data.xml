@@ -8,8 +8,6 @@
     <string name="data_account_update_invalid_parameter">头像和描述不能为空!</string>
     <string name="data_network_error">网络错误！</string>
     <string name="data_upload_error">上传失败！</string>
-
-
     <string name="data_rsp_error_unknown">未知错误(ρ_・).。</string>
     <string name="data_rsp_error_service">服务器错误(ρ_・).。</string>
     <string name="data_rsp_error_not_found_user">未找到用户! →_→</string>
@@ -25,5 +23,4 @@
     <string name="data_rsp_error_account_login">登录失败，是那里没搞定么? §^_^§</string>
     <string name="data_rsp_error_account_register">抱歉，注册失败!  ^_^|||</string>
     <string name="data_rsp_error_account_no_permission">您越权啦!!!</string>
-
 </resources>
