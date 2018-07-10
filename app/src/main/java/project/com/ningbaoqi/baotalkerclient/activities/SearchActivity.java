@@ -11,6 +11,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import project.com.ningbaoqi.baotalkerclient.R;
+import project.com.ningbaoqi.baotalkerclient.fragment.search.SearchGroupFragment;
+import project.com.ningbaoqi.baotalkerclient.fragment.search.SearchUserFragment;
+import project.com.ningbaoqi.common.app.Fragment;
 import project.com.ningbaoqi.common.app.ToolbarActivity;
 
 public class SearchActivity extends ToolbarActivity {
@@ -18,6 +21,8 @@ public class SearchActivity extends ToolbarActivity {
     public static final int TYPE_USER = 1;
     public static final int TYPE_GROUP = 2;
     private int type;//具体需要显示的类型
+    private SearchFragment mSearchFragment;
+
 
     /**
      * 显示搜索界面
@@ -40,6 +45,25 @@ public class SearchActivity extends ToolbarActivity {
     @Override
     protected int getContentLayoutId() {
         return R.layout.activity_search;
+    }
+
+    /**
+     * 显示对应的Fragment
+     */
+    @Override
+    protected void initWidget() {
+        super.initWidget();
+        Fragment fragment;
+        if (type == TYPE_USER) {
+            SearchUserFragment searchUserFragment = new SearchUserFragment();
+            fragment = searchUserFragment;
+            mSearchFragment = searchUserFragment;
+        } else {
+            SearchGroupFragment searchGroupFragment = new SearchGroupFragment();
+            fragment = searchGroupFragment;
+            mSearchFragment = searchGroupFragment;
+        }
+        getSupportFragmentManager().beginTransaction().add(R.id.lay_container, fragment).commit();
     }
 
     /**
@@ -83,6 +107,16 @@ public class SearchActivity extends ToolbarActivity {
      * @param query 搜索的文字
      */
     private void search(String query) {
+        if (mSearchFragment == null) {
+            return;
+        }
+        mSearchFragment.search(query);
+    }
 
+    /**
+     * 搜索的Fragment必须继承的接口
+     */
+    public interface SearchFragment {
+        void search(String content);
     }
 }
