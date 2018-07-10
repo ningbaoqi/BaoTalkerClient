@@ -15,14 +15,29 @@ public abstract class PresenterFragment<Presenter extends BaseContract.Presenter
         initPresenter();//在界面onAttach的时候触发初始化Presenter
     }
 
+    /**
+     * //显示错误 优先使用占位布局
+     *
+     * @param str
+     */
     @Override
     public void showError(int str) {
-        Application.showToast(str);//显示错误
+        if (mPlaceHolderView != null) {
+            mPlaceHolderView.triggerError(str);
+            return;
+        } else {
+            Application.showToast(str);
+        }
     }
 
+    /**
+     * 显示Loading状态
+     */
     @Override
     public void showLoading() {
-        // TODO 显示一个 Loading
+        if (mPlaceHolderView != null) {
+            mPlaceHolderView.triggerLoading();
+        }
     }
 
     /**

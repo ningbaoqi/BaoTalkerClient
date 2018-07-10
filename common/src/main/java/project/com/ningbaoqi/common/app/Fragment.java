@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import project.com.ningbaoqi.common.widget.convention.PlaceHolderView;
 
 /**
  * @author ningbaoqi
@@ -23,6 +24,7 @@ import butterknife.Unbinder;
 public abstract class Fragment extends android.support.v4.app.Fragment {
     protected View mRoot;//复用问题
     protected Unbinder mRootUnBinder;
+    protected PlaceHolderView mPlaceHolderView;
 
     @Override
     public void onAttach(Context context) {
@@ -99,5 +101,14 @@ public abstract class Fragment extends android.support.v4.app.Fragment {
      */
     public boolean onBackPress() {
         return false;
+    }
+
+    /**
+     * 设置占位布局
+     *
+     * @param placeHolderView 继承了占位布局规范的View
+     */
+    public void setPlaceHolderView(PlaceHolderView placeHolderView) {
+        this.mPlaceHolderView = placeHolderView;
     }
 }

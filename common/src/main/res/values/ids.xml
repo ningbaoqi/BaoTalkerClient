@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="tag_recycle_holder" type="id"/>
+    <item name="tag_recycle_holder" type="id" />
     <!--recycler封装的tag属性-->
-    <item type="id" name="tag_recycler_holder"/>
+    <item name="tag_recycler_holder" type="id" />
 
     <!--默认头像的drawable名字-->
-    <item type="drawable" name="default_portrait"/>
+    <item name="default_portrait" type="drawable" />
+
+    <!--toolbar默认的ID名-->
+    <item name="toolbar" type="id" />
 </resources>

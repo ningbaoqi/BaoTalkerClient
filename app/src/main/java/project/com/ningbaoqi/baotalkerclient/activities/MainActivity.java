@@ -58,15 +58,15 @@ public class MainActivity extends Activity implements BottomNavigationView.OnNav
         context.startActivity(new Intent(context, MainActivity.class));
     }
 
-    @Override
-    protected boolean initArgs(Bundle bundle) {
-        if (Account.isComplete()) {
-            return super.initArgs(bundle);//判断用户信息是否完全，完全则走正常流程
-        } else {
-            UserActivity.show(this);
-            return false;
-        }
-    }
+//    @Override
+//    protected boolean initArgs(Bundle bundle) {
+//        if (Account.isComplete()) {
+//            return super.initArgs(bundle);//判断用户信息是否完全，完全则走正常流程
+//        } else {
+//            UserActivity.show(this);
+//            return false;
+//        }
+//    }
 
     @Override
     protected int getContentLayoutId() {
@@ -99,13 +99,26 @@ public class MainActivity extends Activity implements BottomNavigationView.OnNav
         menu.performIdentifierAction(R.id.action_home, 0);//触发menu事件
     }
 
+    /**
+     * 顶部搜索界面点击
+     */
     @OnClick(R.id.search)
     void onSearchMenuClick() {
+        int type = Objects.equals(mNavHelper.getCurrentTab().extra, R.string.title_group) ? SearchActivity.TYPE_GROUP : SearchActivity.TYPE_USER;
+        SearchActivity.show(this, type);
     }
 
+    /**
+     * 浮动按钮点击时：判断当前界面是群还是联系人界面
+     */
     @OnClick(R.id.btn_action)
     void onActionClick() {
-        AccountActivity.show(this);
+        if (Objects.equals(mNavHelper.getCurrentTab().extra, R.string.title_group)) {//打开群创建界面
+            // TODO 打开群创建界面
+
+        } else {
+            SearchActivity.show(this, SearchActivity.TYPE_USER);
+        }
     }
 
     /**
