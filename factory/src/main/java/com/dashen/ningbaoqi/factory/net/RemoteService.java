@@ -7,8 +7,11 @@ import com.dashen.ningbaoqi.factory.model.api.account.RegisterModel;
 import com.dashen.ningbaoqi.factory.model.api.user.UserUpdateModel;
 import com.dashen.ningbaoqi.factory.model.card.UserCard;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
@@ -52,5 +55,14 @@ public interface RemoteService {
      */
     @PUT("user")
     Call<RspModel<UserCard>> userUpdate(@Body UserUpdateModel model);
+
+    /**
+     * 搜索用户的操作
+     *
+     * @param name
+     * @return
+     */
+    @GET("user/search/{name}")
+    Call<RspModel<List<UserCard>>> userSearch(@Path("name") String name);
 
 }

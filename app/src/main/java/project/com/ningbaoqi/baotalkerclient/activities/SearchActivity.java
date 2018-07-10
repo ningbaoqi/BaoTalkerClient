@@ -66,6 +66,12 @@ public class SearchActivity extends ToolbarActivity {
         getSupportFragmentManager().beginTransaction().add(R.id.lay_container, fragment).commit();
     }
 
+    @Override
+    protected void initData() {
+        super.initData();
+        search("");//发起首次搜索
+    }
+
     /**
      * 初始化菜单
      *

@@ -9,6 +9,8 @@ import com.dashen.ningbaoqi.factory.model.db.User;
 import com.dashen.ningbaoqi.factory.net.NetWork;
 import com.dashen.ningbaoqi.factory.net.RemoteService;
 
+import java.util.List;
+
 import project.com.ningbaoqi.factory.data.DataSource;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -44,5 +46,33 @@ public class UserHelper {
                 callback.onDataNotAvailable(R.string.data_network_error);
             }
         });
+    }
+
+    /**
+     * 搜索的方法
+     *
+     * @param name     搜索的名字
+     * @param callback 搜索完成的回调
+     */
+    public static Call search(String name, final DataSource.Callback<List<UserCard>> callback) {
+        RemoteService service = NetWork.remote();
+        Call<RspModel<List<UserCard>>> call = service.userSearch(name);
+        call.enqueue(new Callback<RspModel<List<UserCard>>>() {
+            @Override
+            public void onResponse(Call<RspModel<List<UserCard>>> call, Response<RspModel<List<UserCard>>> response) {
+                RspModel<List<UserCard>> rspModel = response.body();
+                if (rspModel.success()) {
+                    callback.onDataLoaded(rspModel.getResult());
+                } else {
+                    Factory.decodeRspCode(rspModel, callback);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RspModel<List<UserCard>>> call, Throwable t) {
+                callback.onDataNotAvailable(R.string.data_network_error);
+            }
+        });
+        return call;//把当前的调度者返回
     }
 }
