@@ -8,6 +8,7 @@ import com.dashen.ningbaoqi.factory.model.card.UserCard;
 import com.dashen.ningbaoqi.factory.model.db.User;
 import com.dashen.ningbaoqi.factory.net.NetWork;
 import com.dashen.ningbaoqi.factory.net.RemoteService;
+import com.dashen.ningbaoqi.factory.presenter.contact.FollowPresenter;
 
 import java.util.List;
 
@@ -74,5 +75,37 @@ public class UserHelper {
             }
         });
         return call;//把当前的调度者返回
+    }
+
+
+    /**
+     * 关注的网络请求
+     *
+     * @param id
+     * @param callback
+     */
+    public static void follow(String id, final DataSource.Callback<UserCard> callback) {
+        RemoteService service = NetWork.remote();
+        Call<RspModel<UserCard>> call = service.userFollow(id);
+        call.enqueue(new Callback<RspModel<UserCard>>() {
+            @Override
+            public void onResponse(Call<RspModel<UserCard>> call, Response<RspModel<UserCard>> response) {
+                RspModel<UserCard> rspModel = response.body();
+                if (rspModel.success()) {//保存用户的信息到本地数据库
+                    UserCard userCard = rspModel.getResult();
+                    User user = userCard.build();
+                    user.save();
+                    //TODO 通知联系人列表刷新
+                    callback.onDataLoaded(userCard);
+                } else {
+                    Factory.decodeRspCode(rspModel, callback);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RspModel<UserCard>> call, Throwable t) {
+                callback.onDataNotAvailable(R.string.data_network_error);
+            }
+        });
     }
 }
