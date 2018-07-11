@@ -5,7 +5,9 @@ import com.dashen.ningbaoqi.factory.model.db.User;
 
 import java.util.Date;
 
-public class UserCard {
+import project.com.ningbaoqi.factory.model.Author;
+
+public class UserCard implements Author {
     private String id;
     private String name;
     private String phone;

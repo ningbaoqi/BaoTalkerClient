@@ -7,8 +7,10 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import java.util.Date;
 
+import project.com.ningbaoqi.factory.model.Author;
+
 @Table(database = AppDatabase.class)
-public class User extends BaseModel {
+public class User extends BaseModel implements Author {
     public static final int SEX_MAN = 1;
     public static final int SEX_WOMAN = 2;
     @PrimaryKey
