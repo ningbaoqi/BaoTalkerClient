@@ -108,4 +108,31 @@ public class UserHelper {
             }
         });
     }
+
+
+    /**
+     * 刷新联系人
+     *
+     * @param callback 搜索完成的回调
+     */
+    public static void refreshContracts(final DataSource.Callback<List<UserCard>> callback) {
+        RemoteService service = NetWork.remote();
+        service.userContacts().enqueue(new Callback<RspModel<List<UserCard>>>() {
+            @Override
+            public void onResponse(Call<RspModel<List<UserCard>>> call, Response<RspModel<List<UserCard>>> response) {
+                RspModel<List<UserCard>> rspModel = response.body();
+                if (rspModel.success()) {
+                    callback.onDataLoaded(rspModel.getResult());
+                } else {
+                    Factory.decodeRspCode(rspModel, callback);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RspModel<List<UserCard>>> call, Throwable t) {
+                callback.onDataNotAvailable(R.string.data_network_error);
+            }
+        });
+    }
+
 }
