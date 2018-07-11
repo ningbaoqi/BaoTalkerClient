@@ -7,16 +7,18 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.dashen.ningbaoqi.factory.model.db.User;
+import com.dashen.ningbaoqi.factory.presenter.contact.ContactContract;
+import com.dashen.ningbaoqi.factory.presenter.contact.ContactPresenter;
 
 import butterknife.BindView;
 import project.com.ningbaoqi.baotalkerclient.R;
 import project.com.ningbaoqi.baotalkerclient.activities.MessageActivity;
-import project.com.ningbaoqi.common.app.Fragment;
+import project.com.ningbaoqi.common.app.PresenterFragment;
 import project.com.ningbaoqi.common.widget.EmptyView;
 import project.com.ningbaoqi.common.widget.a.PortraitView;
 import project.com.ningbaoqi.common.widget.recycler.RecyclerAdapter;
 
-public class ContactFragment extends Fragment {
+public class ContactFragment extends PresenterFragment<ContactContract.Presenter> implements ContactContract.View {
     @BindView(R.id.empty)
     EmptyView mEmptyView;
     @BindView(R.id.recycler)
@@ -53,6 +55,30 @@ public class ContactFragment extends Fragment {
         //初始化占位布局
         mEmptyView.bind(mRecycler);
         setPlaceHolderView(mEmptyView);
+    }
+
+    /**
+     * 第一次初始化的时候进行首次数据加载
+     */
+    @Override
+    protected void initFirstData() {
+        super.initFirstData();
+        mPresenter.start();
+    }
+
+    @Override
+    protected ContactContract.Presenter initPresenter() {
+        return new ContactPresenter(this);
+    }
+
+    @Override
+    public RecyclerAdapter<User> getRecyclerAdapyer() {
+        return mAdapter;
+    }
+
+    @Override
+    public void onAdapterDataChanged() {
+        mPlaceHolderView.triggerOkOrEmpty(mAdapter.getItemCount() > 0);
     }
 
     class ContactFragmentViewHolder extends RecyclerAdapter.ViewHolder<User> {
