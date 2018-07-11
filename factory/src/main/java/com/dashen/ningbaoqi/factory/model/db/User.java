@@ -137,7 +137,7 @@ public class User extends BaseModel implements Author, DiffUiDataCallback.UiData
      */
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
-    public boolean isSama(User old) {
+    public boolean isSame(User old) {
         return this == old || Objects.equals(id, old.id);
     }
 

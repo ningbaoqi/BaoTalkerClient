@@ -44,7 +44,7 @@ public class DiffUiDataCallback<T extends DiffUiDataCallback.UiDataDiffer<T>> ex
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
         T beanOld = mOldList.get(oldItemPosition);
         T beanNew = mNewList.get(newItemPosition);
-        return beanNew.isSama(beanOld);
+        return beanNew.isSame(beanOld);
     }
 
     /**
@@ -67,7 +67,7 @@ public class DiffUiDataCallback<T extends DiffUiDataCallback.UiDataDiffer<T>> ex
      * @param <T>
      */
     public interface UiDataDiffer<T> {
-        boolean isSama(T old);//传递一个旧的数据给你，问你是否和你表示的是同一个数据
+        boolean isSame(T old);//传递一个旧的数据给你，问你是否和你表示的是同一个数据
 
         boolean isUiContentSame(T old);//你和旧的数据对比，内容是否相同
     }
