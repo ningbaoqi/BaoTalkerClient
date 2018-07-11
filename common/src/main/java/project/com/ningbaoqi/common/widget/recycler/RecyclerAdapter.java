@@ -116,6 +116,16 @@ public abstract class RecyclerAdapter<Data> extends RecyclerView.Adapter<Recycle
         return mDataList.size();
     }
 
+
+    /**
+     * 返回整个集合
+     *
+     * @return
+     */
+    public List<Data> getItems() {
+        return mDataList;
+    }
+
     /**
      * 插入一条数据并通知插入
      *

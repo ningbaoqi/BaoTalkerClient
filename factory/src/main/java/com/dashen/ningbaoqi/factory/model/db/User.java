@@ -1,16 +1,21 @@
 package com.dashen.ningbaoqi.factory.model.db;
 
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+
+import com.dashen.ningbaoqi.factory.utils.DiffUiDataCallback;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import java.util.Date;
+import java.util.Objects;
 
 import project.com.ningbaoqi.factory.model.Author;
 
 @Table(database = AppDatabase.class)
-public class User extends BaseModel implements Author {
+public class User extends BaseModel implements Author, DiffUiDataCallback.UiDataDiffer<User> {
     public static final int SEX_MAN = 1;
     public static final int SEX_WOMAN = 2;
     @PrimaryKey
@@ -122,5 +127,29 @@ public class User extends BaseModel implements Author {
 
     public void setModifyAt(Date modifyAt) {
         this.modifyAt = modifyAt;
+    }
+
+    /**
+     * 主要关注ID即可
+     *
+     * @param old
+     * @return
+     */
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    public boolean isSama(User old) {
+        return this == old || Objects.equals(id, old.id);
+    }
+
+    /**
+     * 主要判断名字 头像  性别  是否已经关注
+     *
+     * @param old
+     * @return
+     */
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    public boolean isUiContentSame(User old) {
+        return this == old || (Objects.equals(name, old.name) && Objects.equals(portrait, old.portrait) && Objects.equals(sex, old.sex) && Objects.equals(isFollow, old.isFollow));
     }
 }
