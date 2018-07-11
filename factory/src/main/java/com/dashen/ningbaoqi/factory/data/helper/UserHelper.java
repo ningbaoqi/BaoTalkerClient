@@ -6,10 +6,13 @@ import com.dashen.ningbaoqi.factory.model.api.RspModel;
 import com.dashen.ningbaoqi.factory.model.api.user.UserUpdateModel;
 import com.dashen.ningbaoqi.factory.model.card.UserCard;
 import com.dashen.ningbaoqi.factory.model.db.User;
+import com.dashen.ningbaoqi.factory.model.db.User_Table;
 import com.dashen.ningbaoqi.factory.net.NetWork;
 import com.dashen.ningbaoqi.factory.net.RemoteService;
 import com.dashen.ningbaoqi.factory.presenter.contact.FollowPresenter;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 
+import java.io.IOException;
 import java.util.List;
 
 import project.com.ningbaoqi.factory.data.DataSource;
@@ -135,4 +138,64 @@ public class UserHelper {
         });
     }
 
+    /**
+     * 搜索一个用户，优先本地缓存，然后再从网络拉取
+     *
+     * @param id
+     * @return
+     */
+    public static User search(String id) {
+        User user = findFromLocal(id);
+        if (user == null) {
+            return findFromNet(id);
+        }
+        return user;
+    }
+
+    /**
+     * 搜索一个用户，优先网络查询；没有然后从本地缓存拉取
+     *
+     * @param id
+     * @return
+     */
+    public static User searchFirstOfNet(String id) {
+        User user = findFromNet(id);
+        if (user == null) {
+            return findFromLocal(id);
+        }
+        return user;
+    }
+
+    /**
+     * 从本地查询一个用户的信息
+     *
+     * @param id
+     * @return
+     */
+    public static User findFromLocal(String id) {
+        return SQLite.select().from(User.class).where(User_Table.id.eq(id)).querySingle();
+    }
+
+    /**
+     * 从网络中查询一个用户的信息
+     *
+     * @param id
+     * @return
+     */
+    public static User findFromNet(String id) {
+        RemoteService service = NetWork.remote();
+        try {
+            Response<RspModel<UserCard>> response = service.userFind(id).execute();//同步的请求
+            UserCard card = response.body().getResult();
+            if (card != null) {
+                // TODO 数据库刷新但是没有通知
+                User user = card.build();
+                user.save();
+                return user;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

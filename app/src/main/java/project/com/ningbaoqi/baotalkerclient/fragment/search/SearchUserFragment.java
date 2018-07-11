@@ -23,6 +23,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 import project.com.ningbaoqi.baotalkerclient.R;
+import project.com.ningbaoqi.baotalkerclient.activities.PersonalActivity;
 import project.com.ningbaoqi.baotalkerclient.activities.SearchActivity;
 import project.com.ningbaoqi.common.app.PresenterFragment;
 import project.com.ningbaoqi.common.widget.EmptyView;
@@ -112,6 +113,14 @@ public class SearchUserFragment extends PresenterFragment<SearchContract.Present
             mPortraitView.setup(Glide.with(SearchUserFragment.this), userCard);
             mName.setText(userCard.getName());
             mFollow.setEnabled(!userCard.isFollow());
+        }
+
+        /**
+         * 头像点击的时候 ; 跳转到个人信息界面
+         */
+        @OnClick(R.id.im_follow)
+        void onPortraitClick() {
+            PersonalActivity.show(getContext(), mData.getId());
         }
 
         /**

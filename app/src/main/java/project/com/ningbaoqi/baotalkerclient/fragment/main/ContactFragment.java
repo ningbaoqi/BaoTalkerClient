@@ -7,12 +7,15 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.dashen.ningbaoqi.factory.model.db.User;
+import com.dashen.ningbaoqi.factory.persistence.Account;
 import com.dashen.ningbaoqi.factory.presenter.contact.ContactContract;
 import com.dashen.ningbaoqi.factory.presenter.contact.ContactPresenter;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 import project.com.ningbaoqi.baotalkerclient.R;
 import project.com.ningbaoqi.baotalkerclient.activities.MessageActivity;
+import project.com.ningbaoqi.baotalkerclient.activities.PersonalActivity;
 import project.com.ningbaoqi.common.app.PresenterFragment;
 import project.com.ningbaoqi.common.widget.EmptyView;
 import project.com.ningbaoqi.common.widget.a.PortraitView;
@@ -91,6 +94,11 @@ public class ContactFragment extends PresenterFragment<ContactContract.Presenter
 
         public ContactFragmentViewHolder(View itemView) {
             super(itemView);
+        }
+
+        @OnClick(R.id.portrait)
+        void onPortraitClick() {
+            PersonalActivity.show(getContext(), mData.getId());
         }
 
         @Override
