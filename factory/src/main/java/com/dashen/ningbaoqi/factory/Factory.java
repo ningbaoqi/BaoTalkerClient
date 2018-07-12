@@ -1,6 +1,13 @@
 package com.dashen.ningbaoqi.factory;
 
+import com.dashen.ningbaoqi.factory.data.group.GroupCenter;
+import com.dashen.ningbaoqi.factory.data.group.GroupDispatcher;
+import com.dashen.ningbaoqi.factory.data.message.MessageCenter;
+import com.dashen.ningbaoqi.factory.data.message.MessageDispatcher;
+import com.dashen.ningbaoqi.factory.data.user.UserCenter;
+import com.dashen.ningbaoqi.factory.data.user.UserDispatcher;
 import com.dashen.ningbaoqi.factory.model.api.RspModel;
+import com.dashen.ningbaoqi.factory.model.card.UserCard;
 import com.dashen.ningbaoqi.factory.persistence.Account;
 import com.dashen.ningbaoqi.factory.utils.DBFlowExclusionStrategy;
 import com.google.gson.Gson;
@@ -151,5 +158,32 @@ public class Factory {
      */
     public static void dispatchPush(String message) {
         // TODO
+    }
+
+    /**
+     * 获取一个用户中心的实现类
+     *
+     * @return 用户中心的规范接口
+     */
+    public static UserCenter getUserCenter() {
+        return UserDispatcher.instance();
+    }
+
+    /**
+     * 获取一个消息中心的实现类
+     *
+     * @return 消息中心的规范接口
+     */
+    public static MessageCenter getMessageCenter() {
+        return MessageDispatcher.instance();
+    }
+
+    /**
+     * 获取一个群处理中心的实现类
+     *
+     * @return 群中心的规范接口
+     */
+    public static GroupCenter getGroupCenter() {
+        return GroupDispatcher.instance();
     }
 }

@@ -52,32 +52,23 @@ public class ContactPresenter extends BasePresenter<ContactContract.View> implem
                 .execute();
 
         //加载网络数据
-        UserHelper.refreshContracts(new DataSource.Callback<List<UserCard>>() {
-            @Override
-            public void onDataNotAvailable(int strRes) {
-                // do nothing
-            }
-
-            @Override
-            public void onDataLoaded(final List<UserCard> userCards) {// 保存数据到数据库
-                final List<User> users = new ArrayList<>();
-                for (UserCard userCard : userCards) {
-                    users.add(userCard.build());
-                }
-
-                DatabaseDefinition definition = FlowManager.getDatabase(AppDatabase.class);
-                definition.beginTransactionAsync(new ITransaction() {
-                    @Override
-                    public void execute(DatabaseWrapper databaseWrapper) {
-                        FlowManager.getModelAdapter(User.class).saveAll(users);
-                    }
-                }).build().execute();
-
-                //网络的数据往往是新的
-                List<User> olds = getView().getRecyclerAdapyer().getItems();
-                diff(users, olds);
-            }
-        });
+        UserHelper.refreshContracts();
+//        final List<User> users = new ArrayList<>();
+//        for (UserCard userCard : userCards) {
+//            users.add(userCard.build());
+//        }
+//
+//        DatabaseDefinition definition = FlowManager.getDatabase(AppDatabase.class);
+//        definition.beginTransactionAsync(new ITransaction() {
+//            @Override
+//            public void execute(DatabaseWrapper databaseWrapper) {
+//                FlowManager.getModelAdapter(User.class).saveAll(users);
+//            }
+//        }).build().execute();
+//
+//        //网络的数据往往是新的
+//        List<User> olds = getView().getRecyclerAdapyer().getItems();
+//        diff(users, olds);
 
         // TODO 问题：关注后虽然存储了数据库但是没有刷新联系人  如果刷新数据库或者从网络刷新最终刷新的是全局刷新  本地刷新和网络刷新都是异步的，但是在添加到界面的时候会后冲突 导致数据显示异常 如何识别已经在数据库中有这样的数据了
     }
