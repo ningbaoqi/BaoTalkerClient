@@ -1,10 +1,14 @@
 package com.dashen.ningbaoqi.factory.data.helper;
 
 import com.dashen.ningbaoqi.factory.model.db.AppDatabase;
+import com.dashen.ningbaoqi.factory.model.db.Group;
 import com.dashen.ningbaoqi.factory.model.db.GroupMember;
+import com.dashen.ningbaoqi.factory.model.db.Group_Table;
 import com.dashen.ningbaoqi.factory.model.db.Message;
+import com.dashen.ningbaoqi.factory.model.db.Session;
 import com.raizlabs.android.dbflow.config.DatabaseDefinition;
 import com.raizlabs.android.dbflow.config.FlowManager;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 import com.raizlabs.android.dbflow.structure.ModelAdapter;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
@@ -13,6 +17,7 @@ import com.raizlabs.android.dbflow.structure.database.transaction.ITransaction;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -148,7 +153,18 @@ public class DBHelper {
      * @param members 群成员列表
      */
     private void updateGroup(GroupMember... members) {
-        
+        final Set<String> groupIds = new HashSet<>();
+        for (GroupMember member : members) {
+            groupIds.add(member.getGroup().getId());
+        }
+        DatabaseDefinition definition = FlowManager.getDatabase(AppDatabase.class);
+        definition.beginTransactionAsync(new ITransaction() {
+            @Override
+            public void execute(DatabaseWrapper databaseWrapper) {
+                List<Group> groups = SQLite.select().from(Group.class).where(Group_Table.id.in(groupIds)).queryList();//找到需要通知的群
+                instance.notifySave(Group.class, groups.toArray(new Group[0]));//通知直接进行一次通知分发
+            }
+        }).build().execute();
     }
 
     /**
@@ -157,7 +173,30 @@ public class DBHelper {
      * @param messages
      */
     private void updateSession(Message... messages) {
-
+        final Set<Session.Identify> identifies = new HashSet<>();//标识一个Session的唯一性
+        for (Message message : messages) {
+            Session.Identify identify = Session.createSessionIdentify(message);
+            identifies.add(identify);
+        }
+        DatabaseDefinition definition = FlowManager.getDatabase(AppDatabase.class);//异步的数据库查询，并异步的发起二次通知
+        definition.beginTransactionAsync(new ITransaction() {
+            @Override
+            public void execute(DatabaseWrapper databaseWrapper) {
+                ModelAdapter<Session> adapter = FlowManager.getModelAdapter(Session.class);
+                Session[] sessions = new Session[identifies.size()];
+                int index = 0;
+                for (Session.Identify identify : identifies) {
+                    Session session = SessionHelper.findFromLocal(identify.id);
+                    if (session == null) {//第一次聊天创建一个你和对方的会话
+                        session = new Session(identify);
+                    }
+                    session.refreshToNow();//把会话刷新到当前Message的最新状态、
+                    adapter.save(session);//数据库存储
+                    sessions[index++] = session;//添加到集合
+                }
+                instance.notifySave(Session.class, sessions);//调用直接进行一次通知分发
+            }
+        }).build().execute();
     }
 
 
