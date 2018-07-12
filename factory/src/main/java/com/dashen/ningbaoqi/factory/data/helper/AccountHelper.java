@@ -91,7 +91,8 @@ public class AccountHelper {
             if (rspModel.success()) {//如果是成功的请求
                 AccountRspModel accountRspModel = rspModel.getResult();//拿到实体
                 final User user = accountRspModel.getUser();
-                user.save();//第一种;直接保存
+                DBHelper.save(User.class, user);
+                /*user.save();第一种;直接保存*/
                             /*FlowManager.getModelAdapter(User.class).save(user);//第二种通过ModelAdapter保存
                             //第三种是放在事务中
                             DatabaseDefinition definition = FlowManager.getDatabase(AppDatabase.class);

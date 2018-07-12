@@ -38,7 +38,7 @@ public class UserHelper {
                     UserCard userCard = rspModel.getResult();
                     //数据库的存储操作，需要把UserCard转换为User;将用户信息保存
                     User user = userCard.build();
-                    user.save();
+                    DBHelper.save(User.class, user);//是一个异步的操作
                     callback.onDataLoaded(userCard);
                 } else {
                     Factory.decodeRspCode(rspModel, callback);//错误情况下进行错误分配
@@ -97,8 +97,7 @@ public class UserHelper {
                 if (rspModel.success()) {//保存用户的信息到本地数据库
                     UserCard userCard = rspModel.getResult();
                     User user = userCard.build();
-                    user.save();
-                    //TODO 通知联系人列表刷新
+                    DBHelper.save(User.class, user);
                     callback.onDataLoaded(userCard);
                 } else {
                     Factory.decodeRspCode(rspModel, callback);
@@ -188,9 +187,8 @@ public class UserHelper {
             Response<RspModel<UserCard>> response = service.userFind(id).execute();//同步的请求
             UserCard card = response.body().getResult();
             if (card != null) {
-                // TODO 数据库刷新但是没有通知
                 User user = card.build();
-                user.save();
+                DBHelper.save(User.class, user);
                 return user;
             }
         } catch (IOException e) {
