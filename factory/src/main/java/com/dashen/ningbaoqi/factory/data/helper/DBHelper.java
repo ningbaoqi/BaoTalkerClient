@@ -148,7 +148,7 @@ public class DBHelper {
      * @param members 群成员列表
      */
     private void updateGroup(GroupMember... members) {
-
+        
     }
 
     /**
@@ -169,7 +169,18 @@ public class DBHelper {
      * @param <Model> 数据类型
      */
     private final <Model extends BaseModel> void notifyDelete(final Class<Model> tClass, final Model... models) {
-        // TODO
+        final Set<ChangedListener> listeners = getListeners(tClass);
+        if (listeners != null && listeners.size() > 0) {
+            for (ChangedListener<Model> listener : listeners) {
+                listener.onDataDelete(models);
+            }
+        }
+        //例外情况
+        if (GroupMember.class.equals(tClass)) {//例外情况：群成员变更需要通知对应的群信息更新
+            updateGroup((GroupMember[]) models);
+        } else if (Message.class.equals(tClass)) {//例外情况：消息变化应该通知会话列表更新
+            updateSession((Message[]) models);
+        }
     }
 
     /**
