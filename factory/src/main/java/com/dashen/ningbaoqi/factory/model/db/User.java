@@ -15,7 +15,7 @@ import java.util.Objects;
 import project.com.ningbaoqi.factory.model.Author;
 
 @Table(database = AppDatabase.class)
-public class User extends BaseModel implements Author, DiffUiDataCallback.UiDataDiffer<User> {
+public class User extends BaseDbModel<User> implements Author {
     public static final int SEX_MAN = 1;
     public static final int SEX_WOMAN = 2;
     @PrimaryKey
@@ -127,6 +127,31 @@ public class User extends BaseModel implements Author, DiffUiDataCallback.UiData
 
     public void setModifyAt(Date modifyAt) {
         this.modifyAt = modifyAt;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return sex == user.sex
+                && follows == user.follows
+                && following == user.following
+                && isFollow == user.isFollow
+                && Objects.equals(id, user.id)
+                && Objects.equals(name, user.name)
+                && Objects.equals(phone, user.phone)
+                && Objects.equals(portrait, user.portrait)
+                && Objects.equals(alias, user.alias)
+                && Objects.equals(desc, user.desc)
+                && Objects.equals(modifyAt, user.modifyAt);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     /**

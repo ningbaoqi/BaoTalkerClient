@@ -225,7 +225,7 @@ public class DBHelper {
     /**
      * 通知监听器
      */
-    public interface ChangedListener<Data> {
+    public interface ChangedListener<Data extends BaseModel> {
 
         void onDataSave(Data... datas);
 
