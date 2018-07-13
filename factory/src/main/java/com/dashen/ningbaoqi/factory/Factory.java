@@ -1,20 +1,29 @@
 package com.dashen.ningbaoqi.factory;
 
+import android.util.Log;
+
 import com.dashen.ningbaoqi.factory.data.group.GroupCenter;
 import com.dashen.ningbaoqi.factory.data.group.GroupDispatcher;
 import com.dashen.ningbaoqi.factory.data.message.MessageCenter;
 import com.dashen.ningbaoqi.factory.data.message.MessageDispatcher;
 import com.dashen.ningbaoqi.factory.data.user.UserCenter;
 import com.dashen.ningbaoqi.factory.data.user.UserDispatcher;
+import com.dashen.ningbaoqi.factory.model.api.PushModel;
 import com.dashen.ningbaoqi.factory.model.api.RspModel;
+import com.dashen.ningbaoqi.factory.model.card.GroupCard;
+import com.dashen.ningbaoqi.factory.model.card.GroupMemberCard;
+import com.dashen.ningbaoqi.factory.model.card.MessageCard;
 import com.dashen.ningbaoqi.factory.model.card.UserCard;
 import com.dashen.ningbaoqi.factory.persistence.Account;
 import com.dashen.ningbaoqi.factory.utils.DBFlowExclusionStrategy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
 
+import java.lang.reflect.Type;
+import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -22,6 +31,7 @@ import project.com.ningbaoqi.common.app.Application;
 import project.com.ningbaoqi.factory.data.DataSource;
 
 public class Factory {
+    private static final String TAG = Factory.class.getSimpleName();
     private static final Factory instance;
     private final Executor executor;//全局的线程池
     private final Gson gson;//全局的Gson
@@ -157,7 +167,43 @@ public class Factory {
      * @param message
      */
     public static void dispatchPush(String message) {
-        // TODO
+        if (!Account.isLogin()) {//首先检查登陆状态
+            return;
+        }
+        PushModel model = PushModel.decode(message);
+        if (message == null) {
+            return;
+        }
+        Log.d(TAG, model.toString());
+        for (PushModel.Entity entity : model.getEntities()) {//对推送集合进行遍历;把数据放在数据中心处理
+            switch (entity.type) {
+                case PushModel.ENTITY_TYPE_LOGOUT://推出消息
+                    instance.logout();
+                    return;
+                case PushModel.ENTITY_TYPE_MESSAGE://普通消息
+                    MessageCard card = getGson().fromJson(entity.content, MessageCard.class);
+                    getMessageCenter().dispatch(card);
+                    break;
+                case PushModel.ENTITY_TYPE_ADD_FRIEND://添加朋友
+                    UserCard userCard = getGson().fromJson(entity.content, UserCard.class);
+                    getUserCenter().dispatch(userCard);
+                    break;
+                case PushModel.ENTITY_TYPE_ADD_GROUP:
+                    GroupCard groupCard = getGson().fromJson(entity.content, GroupCard.class);
+                    getGroupCenter().dispatch(groupCard);
+                    break;
+                case PushModel.ENTITY_TYPE_ADD_GROUP_MEMBERS:
+                case PushModel.ENTITY_TYPE_MODIFY_GROUP_MEMBERS:
+                    Type type = new TypeToken<List<GroupMemberCard>>() {
+                    }.getType();
+                    List<GroupMemberCard> cards = getGson().fromJson(entity.content, type);
+                    getGroupCenter().dispatch(cards.toArray(new GroupMemberCard[0]));
+                    break;
+                case PushModel.ENTITY_TYPE_EXIT_GROUP_MEMBERS:
+                    // TODO 成员退出的推送
+                    break;
+            }
+        }
     }
 
     /**
