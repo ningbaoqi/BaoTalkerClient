@@ -54,4 +54,7 @@ dependencies {
     implementation 'com.yalantis:ucrop:2.2.0-native'
     implementation "pub.devrel:easypermissions:$rootProject.ext.easyPMVersion"//谷歌提高的动态获取权限的包
     implementation "com.getui:sdk:$rootProject.ext.getuiVersion"
+    annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:${rootProject.ext.dbflowVersion}"
+    implementation "com.github.Raizlabs.DBFlow:dbflow-core:${rootProject.ext.dbflowVersion}"
+    implementation "com.github.Raizlabs.DBFlow:dbflow:${rootProject.ext.dbflowVersion}"
 }
