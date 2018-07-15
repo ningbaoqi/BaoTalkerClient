@@ -41,7 +41,7 @@ public class ContactPresenter extends BaseSourcePresenter<User, User, ContactDat
         if (view == null) {
             return;
         }
-        RecyclerAdapter<User> adapter = view.getRecyclerAdapyer();
+        RecyclerAdapter<User> adapter = view.getRecyclerAdapter();
         List<User> old = adapter.getItems();
         DiffUtil.Callback callback = new DiffUiDataCallback<User>(old, users);
         DiffUtil.DiffResult result = DiffUtil.calculateDiff(callback);

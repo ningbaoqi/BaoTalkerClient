@@ -75,7 +75,7 @@ public class ContactFragment extends PresenterFragment<ContactContract.Presenter
     }
 
     @Override
-    public RecyclerAdapter<User> getRecyclerAdapyer() {
+    public RecyclerAdapter<User> getRecyclerAdapter() {
         return mAdapter;
     }
 

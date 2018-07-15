@@ -7,6 +7,10 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.dashen.ningbaoqi.factory.model.db.User;
+import com.dashen.ningbaoqi.factory.presenter.message.ChatContract;
+import com.dashen.ningbaoqi.factory.presenter.message.ChatUserPresenter;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import project.com.ningbaoqi.baotalkerclient.R;
@@ -16,7 +20,7 @@ import project.com.ningbaoqi.common.widget.a.PortraitView;
 /**
  * 用户聊天界面
  */
-public class ChatUserFragment extends ChatFragment {
+public class ChatUserFragment extends ChatFragment<User> implements ChatContract.UserView {
     @BindView(R.id.im_portrait)
     PortraitView mPortraitView;
     private MenuItem mUserInfoMenuItem;
@@ -89,5 +93,15 @@ public class ChatUserFragment extends ChatFragment {
     @OnClick(R.id.im_portrait)
     void onProtraitClick() {
         PersonalActivity.show(getContext(), mReceiverId);
+    }
+
+    @Override
+    public void onInit(User user) {
+
+    }
+
+    @Override
+    protected ChatContract.Presenter initPresenter() {
+        return new ChatUserPresenter(this, mReceiverId);//初始化Presenter
     }
 }

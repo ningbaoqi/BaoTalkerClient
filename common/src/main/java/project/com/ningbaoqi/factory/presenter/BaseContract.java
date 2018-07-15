@@ -35,7 +35,7 @@ public interface BaseContract {
      * @param <T>
      */
     interface RecyclerView<T extends Presenter, ViewMode> extends View<T> {
-        RecyclerAdapter<ViewMode> getRecyclerAdapyer();
+        RecyclerAdapter<ViewMode> getRecyclerAdapter();
 
         void onAdapterDataChanged();//当适配器数据更改的时候进行触发
     }

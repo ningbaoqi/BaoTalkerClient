@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.dashen.ningbaoqi.factory.model.db.Message;
 import com.dashen.ningbaoqi.factory.model.db.User;
 import com.dashen.ningbaoqi.factory.persistence.Account;
+import com.dashen.ningbaoqi.factory.presenter.message.ChatContract;
 
 import net.qiujuer.genius.ui.compat.UiCompat;
 import net.qiujuer.genius.ui.widget.Loading;
@@ -27,12 +28,12 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import project.com.ningbaoqi.baotalkerclient.R;
 import project.com.ningbaoqi.baotalkerclient.activities.MessageActivity;
-import project.com.ningbaoqi.common.app.Fragment;
+import project.com.ningbaoqi.common.app.PresenterFragment;
 import project.com.ningbaoqi.common.widget.a.PortraitView;
 import project.com.ningbaoqi.common.widget.adapter.TextWatcherAdapter;
 import project.com.ningbaoqi.common.widget.recycler.RecyclerAdapter;
 
-public abstract class ChatFragment extends Fragment implements AppBarLayout.OnOffsetChangedListener {
+public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatContract.Presenter> implements AppBarLayout.OnOffsetChangedListener, ChatContract.View<InitModel> {
     protected String mReceiverId;
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -61,6 +62,12 @@ public abstract class ChatFragment extends Fragment implements AppBarLayout.OnOf
         mRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new Adapter();
         mRecycler.setAdapter(mAdapter);
+    }
+
+    @Override
+    protected void initData() {
+        super.initData();
+        mPresenter.start();
     }
 
     /**
@@ -114,6 +121,9 @@ public abstract class ChatFragment extends Fragment implements AppBarLayout.OnOf
     void onSubmitClick() {
         if (mSubmit.isActivated()) {
             //发送消息
+            String content = mContent.getText().toString();
+            mContent.setText("");
+            mPresenter.pushText(content);
         } else {
             onMoreClick();
         }
@@ -124,6 +134,16 @@ public abstract class ChatFragment extends Fragment implements AppBarLayout.OnOf
      */
     private void onMoreClick() {
         // TODO
+    }
+
+    @Override
+    public RecyclerAdapter<Message> getRecyclerAdapter() {
+        return mAdapter;
+    }
+
+    @Override
+    public void onAdapterDataChanged() {
+        //界面没有占位布局，Recycler是一直显示的所以不需要做任何事情
     }
 
     /**

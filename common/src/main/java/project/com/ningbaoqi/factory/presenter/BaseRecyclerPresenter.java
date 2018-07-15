@@ -34,7 +34,7 @@ public class BaseRecyclerPresenter<ViewMode, View extends BaseContract.RecyclerV
                     return;
                 }
                 //基本的更新数据并刷新界面
-                RecyclerAdapter<ViewMode> adapter = view.getRecyclerAdapyer();
+                RecyclerAdapter<ViewMode> adapter = view.getRecyclerAdapter();
                 adapter.replace(dataList);
                 view.onAdapterDataChanged();
             }
@@ -61,7 +61,7 @@ public class BaseRecyclerPresenter<ViewMode, View extends BaseContract.RecyclerV
         if (view == null) {
             return;
         }
-        RecyclerAdapter<ViewMode> adapter = view.getRecyclerAdapyer();
+        RecyclerAdapter<ViewMode> adapter = view.getRecyclerAdapter();
         adapter.getItems().clear();//改变数据集合而不通知界面刷新
         adapter.getItems().addAll(dataList);
         view.onAdapterDataChanged();//通知界面刷新占位布局
