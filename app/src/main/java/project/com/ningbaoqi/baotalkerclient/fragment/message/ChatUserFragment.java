@@ -1,12 +1,17 @@
 package project.com.ningbaoqi.baotalkerclient.fragment.message;
 
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.ViewTarget;
 import com.dashen.ningbaoqi.factory.model.db.User;
 import com.dashen.ningbaoqi.factory.presenter.message.ChatContract;
 import com.dashen.ningbaoqi.factory.presenter.message.ChatUserPresenter;
@@ -28,6 +33,17 @@ public class ChatUserFragment extends ChatFragment<User> implements ChatContract
     @Override
     protected int getContentLayoutId() {
         return R.layout.fragment_chat_user;
+    }
+
+    @Override
+    protected void initWidget(View root) {
+        super.initWidget(root);
+        Glide.with(this).load(R.mipmap.default_banner_chat).into(new ViewTarget<CollapsingToolbarLayout, GlideDrawable>(mCollapsingToolbarLayout) {
+            @Override
+            public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
+                this.view.setContentScrim(resource.getCurrent());
+            }
+        });
     }
 
     @Override
@@ -97,7 +113,8 @@ public class ChatUserFragment extends ChatFragment<User> implements ChatContract
 
     @Override
     public void onInit(User user) {
-
+        mPortraitView.setup(Glide.with(this), user.getPortrait());
+        mCollapsingToolbarLayout.setTitle(user.getName());
     }
 
     @Override

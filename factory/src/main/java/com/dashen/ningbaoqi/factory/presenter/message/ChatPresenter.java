@@ -6,6 +6,7 @@ import com.dashen.ningbaoqi.factory.data.helper.MessageHelper;
 import com.dashen.ningbaoqi.factory.data.message.MessageDataSource;
 import com.dashen.ningbaoqi.factory.model.api.message.MsgCreateModel;
 import com.dashen.ningbaoqi.factory.model.db.Message;
+import com.dashen.ningbaoqi.factory.persistence.Account;
 import com.dashen.ningbaoqi.factory.presenter.BaseSourcePresenter;
 import com.dashen.ningbaoqi.factory.utils.DiffUiDataCallback;
 
@@ -42,6 +43,12 @@ public class ChatPresenter<View extends ChatContract.View> extends BaseSourcePre
 
     @Override
     public boolean rePush(Message message) {
+        if (Account.getUserId().equalsIgnoreCase(message.getSender().getId()) && message.getStatus() == Message.STATUS_FAILED) {//允许重新发送的情况下
+            message.setStatus(Message.STATUS_CREATED);//更改状态
+            MsgCreateModel model = MsgCreateModel.buildWithMessage(message);//构建发送model
+            MessageHelper.push(model);
+            return true;
+        }
         return false;
     }
 
