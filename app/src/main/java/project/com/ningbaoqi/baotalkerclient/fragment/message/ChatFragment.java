@@ -5,21 +5,31 @@ import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 import project.com.ningbaoqi.baotalkerclient.R;
 import project.com.ningbaoqi.baotalkerclient.activities.MessageActivity;
 import project.com.ningbaoqi.common.app.Fragment;
+import project.com.ningbaoqi.common.widget.adapter.TextWatcherAdapter;
 
 public abstract class ChatFragment extends Fragment implements AppBarLayout.OnOffsetChangedListener {
-    private String mReceiverId;
+    protected String mReceiverId;
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
     @BindView(R.id.recycler)
     RecyclerView mRecycler;
     @BindView(R.id.appbar)
     AppBarLayout mAppBarLayout;
+    @BindView(R.id.edit_content)
+    EditText mContent;
+    @BindView(R.id.btn_submit)
+    ImageView mSubmit;
 
     @Override
     protected void initArgs(Bundle bundle) {
@@ -32,10 +42,14 @@ public abstract class ChatFragment extends Fragment implements AppBarLayout.OnOf
         super.initWidget(root);
         initToolBar();
         initAppBar();
+        initEditContent();
         mRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
-    private void initToolBar() {
+    /**
+     * 初始化ToolBar
+     */
+    protected void initToolBar() {
         Toolbar toolbar = mToolbar;
         toolbar.setNavigationIcon(R.drawable.ic_back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -53,8 +67,45 @@ public abstract class ChatFragment extends Fragment implements AppBarLayout.OnOf
         mAppBarLayout.addOnOffsetChangedListener(this);
     }
 
+    private void initEditContent() {
+        mContent.addTextChangedListener(new TextWatcherAdapter() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                String content = s.toString().trim();
+                boolean needSendMsg = !TextUtils.isEmpty(content);
+                mSubmit.setActivated(needSendMsg);
+            }
+        });
+    }
+
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-        
+
+    }
+
+    @OnClick(R.id.btn_face)
+    void onFaceClick() {
+        // TODO
+    }
+
+    @OnClick(R.id.btn_record)
+    void onRecordClick() {
+        // TODO
+    }
+
+    @OnClick(R.id.btn_submit)
+    void onSubmitClick() {
+        if (mSubmit.isActivated()) {
+            //发送消息
+        } else {
+            onMoreClick();
+        }
+    }
+
+    /**
+     * 打开更多
+     */
+    private void onMoreClick() {
+        // TODO
     }
 }
