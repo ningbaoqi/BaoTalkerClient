@@ -20,7 +20,7 @@ import project.com.ningbaoqi.utils.CollectionUtil;
  */
 public abstract class BaseDbRepository<Data extends BaseDbModel<Data>> implements DbDataSource<Data>, DBHelper.ChangedListener<Data>, QueryTransaction.QueryResultListCallback<Data> {
     private SucceedCallback<List<Data>> callback;//和Presenter交互的回调
-    private final List<Data> dataList = new LinkedList<>();//当前缓存的数据
+    protected final LinkedList<Data> dataList = new LinkedList<>();//当前缓存的数据
     private Class<Data> dataClass;//当前泛型对应的真实的信息
 
     public BaseDbRepository() {

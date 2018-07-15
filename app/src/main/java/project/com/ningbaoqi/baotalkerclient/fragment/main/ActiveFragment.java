@@ -8,18 +8,16 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.dashen.ningbaoqi.factory.model.db.Session;
-import com.dashen.ningbaoqi.factory.model.db.User;
 import com.dashen.ningbaoqi.factory.presenter.message.SessionContract;
+import com.dashen.ningbaoqi.factory.presenter.message.SessionPresenter;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import project.com.ningbaoqi.baotalkerclient.R;
 import project.com.ningbaoqi.baotalkerclient.activities.MessageActivity;
 import project.com.ningbaoqi.baotalkerclient.activities.PersonalActivity;
-import project.com.ningbaoqi.common.app.Fragment;
 import project.com.ningbaoqi.common.app.PresenterFragment;
 import project.com.ningbaoqi.common.widget.EmptyView;
-import project.com.ningbaoqi.common.widget.a.GalleryView;
 import project.com.ningbaoqi.common.widget.a.PortraitView;
 import project.com.ningbaoqi.common.widget.recycler.RecyclerAdapter;
 import project.com.ningbaoqi.utils.DateTimeUtil;
@@ -75,7 +73,7 @@ public class ActiveFragment extends PresenterFragment<SessionContract.Presenter>
 
     @Override
     protected SessionContract.Presenter initPresenter() {
-        return null;
+        return new SessionPresenter(this);
     }
 
     @Override
