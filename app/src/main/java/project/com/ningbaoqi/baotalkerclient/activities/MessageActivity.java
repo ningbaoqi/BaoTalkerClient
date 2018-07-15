@@ -7,6 +7,8 @@ import android.support.annotation.StringRes;
 import android.text.TextUtils;
 
 import com.dashen.ningbaoqi.factory.model.db.Group;
+import com.dashen.ningbaoqi.factory.model.db.Message;
+import com.dashen.ningbaoqi.factory.model.db.Session;
 
 import project.com.ningbaoqi.baotalkerclient.R;
 import project.com.ningbaoqi.baotalkerclient.fragment.message.ChatGroupFragment;
@@ -50,6 +52,22 @@ public class MessageActivity extends Activity {
         Intent intent = new Intent(context, MessageActivity.class);
         intent.putExtra(KEY_RECEIVER_ID, group.getId());
         intent.putExtra(KEY_RECEIVER_IS_GROUP, true);
+        context.startActivity(intent);
+    }
+
+    /**
+     * 通过Session
+     *
+     * @param context 上下文
+     * @param session session
+     */
+    public static void show(Context context, Session session) {
+        if (session == null || context == null || TextUtils.isEmpty(session.getId())) {
+            return;
+        }
+        Intent intent = new Intent(context, MessageActivity.class);
+        intent.putExtra(KEY_RECEIVER_ID, session.getId());
+        intent.putExtra(KEY_RECEIVER_IS_GROUP, session.getReceiverType() == Message.RECEIVER_TYPE_GROUP);
         context.startActivity(intent);
     }
 
