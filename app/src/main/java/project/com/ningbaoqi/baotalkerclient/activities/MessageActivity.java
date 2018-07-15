@@ -2,18 +2,22 @@ package project.com.ningbaoqi.baotalkerclient.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.text.TextUtils;
 
 import com.dashen.ningbaoqi.factory.model.db.Group;
 
 import project.com.ningbaoqi.baotalkerclient.R;
+import project.com.ningbaoqi.baotalkerclient.fragment.message.ChatGroupFragment;
+import project.com.ningbaoqi.baotalkerclient.fragment.message.ChatUserFragment;
 import project.com.ningbaoqi.common.app.Activity;
+import project.com.ningbaoqi.common.app.Fragment;
 import project.com.ningbaoqi.factory.model.Author;
 
 public class MessageActivity extends Activity {
-    private static final String KEY_RECEIVER_ID = "KEY_RECEIVER_ID";//接收者ID，可以是群也可以是人的Id
-    private static final String KEY_RECEIVER_IS_GROUP = "KEY_RECEIVER_IS_GROUP";//标识是否是群
+    public static final String KEY_RECEIVER_ID = "KEY_RECEIVER_ID";//接收者ID，可以是群也可以是人的Id
+    public static final String KEY_RECEIVER_IS_GROUP = "KEY_RECEIVER_IS_GROUP";//标识是否是群
     private String mReceiverId;
     private boolean mIsGroup;
 
@@ -54,5 +58,26 @@ public class MessageActivity extends Activity {
         return R.layout.activity_message;
     }
 
-    
+    @Override
+    protected boolean initArgs(Bundle bundle) {
+        mReceiverId = bundle.getString(KEY_RECEIVER_ID);
+        mIsGroup = bundle.getBoolean(KEY_RECEIVER_IS_GROUP);
+        return !TextUtils.isEmpty(mReceiverId);
+    }
+
+    @Override
+    protected void initWidget() {
+        super.initWidget();
+        setTitle("");
+        Fragment fragment;
+        if (mIsGroup) {
+            fragment = new ChatGroupFragment();
+        } else {
+            fragment = new ChatUserFragment();
+        }
+        Bundle bundle = new Bundle();
+        bundle.putString(KEY_RECEIVER_ID, mReceiverId);
+        fragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().add(R.id.lay_container, fragment).commit();
+    }
 }
