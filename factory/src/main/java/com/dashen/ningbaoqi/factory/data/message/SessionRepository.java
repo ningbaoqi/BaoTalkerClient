@@ -18,7 +18,7 @@ public class SessionRepository extends BaseDbRepository<Session> implements Sess
     @Override
     public void load(SucceedCallback<List<Session>> callback) {
         super.load(callback);
-        SQLite.select().from(Session.class).orderBy(Session_Table.modifyAt, true).limit(100).async().queryListResultCallback(this).execute();
+        SQLite.select().from(Session.class).orderBy(Session_Table.modifyAt, false).limit(100).async().queryListResultCallback(this).execute();//倒序查询
     }
 
     @Override
