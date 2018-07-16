@@ -152,9 +152,14 @@ public class GroupCreateActivity extends PresenterToolbarActivity<GroupCreateCon
         manager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
+    /**
+     * 提示成功
+     */
     @Override
     public void onCreateSucceed() {
-
+        hideLoading();
+        Application.showToast(R.string.label_group_create_succeed);
+        finish();
     }
 
     @Override
@@ -169,7 +174,7 @@ public class GroupCreateActivity extends PresenterToolbarActivity<GroupCreateCon
 
     @Override
     public void onAdapterDataChanged() {
-
+        hideLoading();
     }
 
     private class Adapter extends RecyclerAdapter<GroupCreateContract.ViewModel> {

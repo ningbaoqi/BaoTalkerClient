@@ -4,8 +4,10 @@ import com.dashen.ningbaoqi.factory.model.api.RspModel;
 import com.dashen.ningbaoqi.factory.model.api.account.AccountRspModel;
 import com.dashen.ningbaoqi.factory.model.api.account.LoginModel;
 import com.dashen.ningbaoqi.factory.model.api.account.RegisterModel;
+import com.dashen.ningbaoqi.factory.model.api.group.GroupCreateModel;
 import com.dashen.ningbaoqi.factory.model.api.message.MsgCreateModel;
 import com.dashen.ningbaoqi.factory.model.api.user.UserUpdateModel;
+import com.dashen.ningbaoqi.factory.model.card.GroupCard;
 import com.dashen.ningbaoqi.factory.model.card.MessageCard;
 import com.dashen.ningbaoqi.factory.model.card.UserCard;
 
@@ -101,4 +103,22 @@ public interface RemoteService {
      */
     @POST("msg")
     Call<RspModel<MessageCard>> msgPush(@Body MsgCreateModel model);
+
+    /**
+     * 创建群
+     *
+     * @param model
+     * @return
+     */
+    @POST("group")
+    Call<RspModel<GroupCard>> groupCreate(@Body GroupCreateModel model);
+
+    /**
+     * 查找群
+     *
+     * @param groupId
+     * @return
+     */
+    @GET("group/{groupId}")
+    Call<RspModel<GroupCard>> groupFind(@Path("groupId") String groupId);
 }
