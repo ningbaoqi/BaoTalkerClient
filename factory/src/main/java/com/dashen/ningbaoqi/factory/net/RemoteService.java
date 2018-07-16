@@ -5,9 +5,11 @@ import com.dashen.ningbaoqi.factory.model.api.account.AccountRspModel;
 import com.dashen.ningbaoqi.factory.model.api.account.LoginModel;
 import com.dashen.ningbaoqi.factory.model.api.account.RegisterModel;
 import com.dashen.ningbaoqi.factory.model.api.group.GroupCreateModel;
+import com.dashen.ningbaoqi.factory.model.api.group.GroupMemberAddModel;
 import com.dashen.ningbaoqi.factory.model.api.message.MsgCreateModel;
 import com.dashen.ningbaoqi.factory.model.api.user.UserUpdateModel;
 import com.dashen.ningbaoqi.factory.model.card.GroupCard;
+import com.dashen.ningbaoqi.factory.model.card.GroupMemberCard;
 import com.dashen.ningbaoqi.factory.model.card.MessageCard;
 import com.dashen.ningbaoqi.factory.model.card.UserCard;
 
@@ -121,4 +123,41 @@ public interface RemoteService {
      */
     @GET("group/{groupId}")
     Call<RspModel<GroupCard>> groupFind(@Path("groupId") String groupId);
+
+    /**
+     * 群搜索的接口
+     *
+     * @param name
+     * @return
+     */
+    @GET("group/search/{name}")
+    Call<RspModel<List<GroupCard>>> groupSearch(@Path(value = "name", encoded = true) String name);
+
+    /**
+     * 返回群的列表
+     *
+     * @param date
+     * @return
+     */
+    @GET("group/list/{date}")
+    Call<RspModel<List<GroupCard>>> groups(@Path(value = "date", encoded = true) String date);
+
+    /**
+     * 我的群的成员列表
+     *
+     * @param groupId
+     * @return
+     */
+    @GET("group/{groupId}/{member}")
+    Call<RspModel<List<GroupMemberCard>>> groupMembers(@Path("groupId") String groupId);
+
+    /**
+     * 给群添加成员
+     *
+     * @param groupId
+     * @param model
+     * @return
+     */
+    @POST("group/{groupId}/{member}")
+    Call<RspModel<List<GroupMemberCard>>> groupMemberAdd(@Path("groupId") String groupId, @Body GroupMemberAddModel model);
 }
