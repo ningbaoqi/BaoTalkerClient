@@ -17,11 +17,14 @@ import com.dashen.ningbaoqi.factory.presenter.group.GroupCreateContract;
 import com.dashen.ningbaoqi.factory.presenter.group.GroupCreatePresenter;
 import com.yalantis.ucrop.UCrop;
 
+import net.qiujuer.genius.ui.widget.CheckBox;
 import net.qiujuer.genius.ui.widget.EditText;
+import net.qiujuer.genius.ui.widget.TextView;
 
 import java.io.File;
 
 import butterknife.BindView;
+import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import project.com.ningbaoqi.baotalkerclient.R;
 import project.com.ningbaoqi.baotalkerclient.fragment.media.GalleryFragment;
@@ -56,7 +59,13 @@ public class GroupCreateActivity extends PresenterToolbarActivity<GroupCreateCon
         super.initWidget();
         setTitle("");
         mRecycler.setLayoutManager(new LinearLayoutManager(this));
-        mRecycler.setAdapter(mAdapter);
+        mRecycler.setAdapter(mAdapter = new Adapter());
+    }
+
+    @Override
+    protected void initData() {
+        super.initData();
+        mPresenter.start();
     }
 
     @OnClick(R.id.im_portrait)
@@ -176,14 +185,27 @@ public class GroupCreateActivity extends PresenterToolbarActivity<GroupCreateCon
     }
 
     class ViewHolder extends RecyclerAdapter.ViewHolder<GroupCreateContract.ViewModel> {
-        public ViewHolder(View itemView) {
+        @BindView(R.id.im_portrait)
+        PortraitView mPortrait;
+        @BindView(R.id.txt_name)
+        TextView mName;
+        @BindView(R.id.cb_select)
+        CheckBox mSelect;
+
+        ViewHolder(View itemView) {
             super(itemView);
         }
 
         @Override
         protected void onBind(GroupCreateContract.ViewModel viewModel) {
+            mPortrait.setup(Glide.with(GroupCreateActivity.this), viewModel.author);
+            mName.setText(viewModel.author.getName());
+            mSelect.setChecked(viewModel.isSelected);
+        }
 
+        @OnCheckedChanged(R.id.cb_select)
+        void onCheckedChanged(boolean checked) {//更改选中状态
+            mPresenter.changeSelect(mData, checked);
         }
     }
-
 }

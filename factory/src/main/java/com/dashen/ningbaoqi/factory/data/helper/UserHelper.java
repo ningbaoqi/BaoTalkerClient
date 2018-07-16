@@ -7,8 +7,10 @@ import com.dashen.ningbaoqi.factory.model.api.user.UserUpdateModel;
 import com.dashen.ningbaoqi.factory.model.card.UserCard;
 import com.dashen.ningbaoqi.factory.model.db.User;
 import com.dashen.ningbaoqi.factory.model.db.User_Table;
+import com.dashen.ningbaoqi.factory.model.db.view.UserSampleModel;
 import com.dashen.ningbaoqi.factory.net.NetWork;
 import com.dashen.ningbaoqi.factory.net.RemoteService;
+import com.dashen.ningbaoqi.factory.persistence.Account;
 import com.dashen.ningbaoqi.factory.presenter.contact.FollowPresenter;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
@@ -196,5 +198,22 @@ public class UserHelper {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * 获取联系人
+     */
+    public static List<User> getContact() {
+        return SQLite.select().from(User.class).where(User_Table.isFollow.eq(true))
+                .and(User_Table.id.notEq(Account.getUserId())).orderBy(User_Table.name, true).limit(100).queryList();
+    }
+
+    /**
+     * 获取联系人列表，但是是一个简单的数据的
+     */
+    public static List<UserSampleModel> getSampleContact() {
+        return SQLite.select(User_Table.id.withTable().as("id"), User_Table.name.withTable().as("name"), User_Table.portrait.withTable().as("portrait"))
+                .from(User.class).where(User_Table.isFollow.eq(true))
+                .and(User_Table.id.notEq(Account.getUserId())).orderBy(User_Table.name, true).queryCustomList(UserSampleModel.class);
     }
 }
