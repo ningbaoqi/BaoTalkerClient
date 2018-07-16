@@ -4,6 +4,8 @@ import android.support.annotation.NonNull;
 
 import com.dashen.ningbaoqi.factory.data.BaseDbRepository;
 import com.dashen.ningbaoqi.factory.model.db.Message;
+import com.dashen.ningbaoqi.factory.model.db.Message_Table;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.database.transaction.QueryTransaction;
 
 import java.util.Collections;
@@ -23,15 +25,13 @@ public class MessageGroupRepository extends BaseDbRepository<Message> implements
     @Override
     public void load(SucceedCallback<List<Message>> callback) {
         super.load(callback);
-
-        // TODO
-//        SQLite.select().from(Message.class).where(OperatorGroup.clause().and(Message_Table.sender_id.eq(receiverId)).and(Message_Table.group_id.isNull()))
-//                .or(Message_Table.receiver_id.eq(receiverId)).orderBy(Message_Table.createAt, false).limit(30).async().queryListResultCallback(this).execute();
+        SQLite.select().from(Message.class).where(Message_Table.group_id.eq(receiverId))//无论是自己发还是别人发，只要是发到这个群的这个groupId就是ReceivedId
+                .orderBy(Message_Table.createAt, false).limit(30).async().queryListResultCallback(this).execute();
     }
 
     @Override
     protected boolean isRequired(Message message) {
-        return false;
+        return message.getGroup() != null && receiverId.equalsIgnoreCase(message.getGroup().getId());//如果消息的group不为空，则一定是发送到一个群的，如果群Id等于我们需要的那就是通过了
     }
 
     @Override
