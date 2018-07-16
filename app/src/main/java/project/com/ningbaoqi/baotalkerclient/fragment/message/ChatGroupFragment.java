@@ -23,6 +23,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import project.com.ningbaoqi.baotalkerclient.R;
+import project.com.ningbaoqi.baotalkerclient.activities.GroupMemberActivity;
 import project.com.ningbaoqi.baotalkerclient.activities.PersonalActivity;
 
 /**
@@ -121,7 +122,7 @@ public class ChatGroupFragment extends ChatFragment<Group> implements ChatContra
             mMemberMore.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // TODO 显示成员列表
+                    GroupMemberActivity.show(getContext(), mReceiverId);// 显示成员列表
                 }
             });
         } else {
@@ -137,7 +138,7 @@ public class ChatGroupFragment extends ChatFragment<Group> implements ChatContra
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
                     if (item.getItemId() == R.id.action_add) {
-                        // TODO 群成员添加
+                        GroupMemberActivity.showAdmin(getContext(), mReceiverId);//群成员添加 mReceiverId就是群的Id
                         return true;
                     }
                     return false;

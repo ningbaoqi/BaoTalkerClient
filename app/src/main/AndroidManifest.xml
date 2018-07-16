@@ -79,6 +79,12 @@
             android:label="@string/title_activity_personal"
             android:screenOrientation="portrait"
             android:theme="@style/AppATheme" />
+        <activity
+            android:name=".activities.GroupMemberActivity"
+            android:label="@string/title_activity_personal"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppATheme" />
+        
         <!--个推广播接收器-->
         <receiver
             android:name=".MessageReceiver"
