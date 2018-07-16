@@ -129,9 +129,28 @@ public class GroupHelper {
     }
 
     /**
-     * 刷新我的群组
+     * 刷新我的群组列表
      */
     public static void refreshGroups() {
+        RemoteService service = NetWork.remote();
+        service.groups("").enqueue(new Callback<RspModel<List<GroupCard>>>() {
+            @Override
+            public void onResponse(Call<RspModel<List<GroupCard>>> call, Response<RspModel<List<GroupCard>>> response) {
+                RspModel<List<GroupCard>> rspModel = response.body();
+                if (rspModel.success()) {
+                    List<GroupCard> groupCards = rspModel.getResult();
+                    if (groupCards != null && groupCards.size() > 0) {
+                        Factory.getGroupCenter().dispatch(groupCards.toArray(new GroupCard[0]));//进行调度显示
+                    }
+                } else {
+                    Factory.decodeRspCode(rspModel, null);
+                }
+            }
 
+            @Override
+            public void onFailure(Call<RspModel<List<GroupCard>>> call, Throwable t) {
+                // do nothing
+            }
+        });
     }
 }
