@@ -41,6 +41,6 @@ public class ChatContract {
     public interface GroupView extends View<Group> {
         void showAdminOption(boolean isAdmin);//显示是否是管理员
 
-        void onInitGroupMembers(List<MemberUserModel> members, int moreCount);//初始化成员
+        void onInitGroupMembers(List<MemberUserModel> members, long moreCount);//初始化成员
     }
 }
