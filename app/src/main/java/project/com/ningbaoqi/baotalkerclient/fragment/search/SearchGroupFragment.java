@@ -100,7 +100,7 @@ public class SearchGroupFragment extends PresenterFragment<SearchContract.Presen
         @BindView(R.id.txt_name)
         TextView mName;
         @BindView(R.id.im_join)
-        TextView mJoin;
+        ImageView mJoin;
 
         public ViewHolder(View itemView) {
             super(itemView);

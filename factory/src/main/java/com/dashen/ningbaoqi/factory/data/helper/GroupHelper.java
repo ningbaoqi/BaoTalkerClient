@@ -5,14 +5,17 @@ import com.dashen.ningbaoqi.factory.R;
 import com.dashen.ningbaoqi.factory.model.api.RspModel;
 import com.dashen.ningbaoqi.factory.model.api.group.GroupCreateModel;
 import com.dashen.ningbaoqi.factory.model.card.GroupCard;
+import com.dashen.ningbaoqi.factory.model.card.UserCard;
 import com.dashen.ningbaoqi.factory.model.db.Group;
 import com.dashen.ningbaoqi.factory.model.db.Group_Table;
 import com.dashen.ningbaoqi.factory.model.db.User;
 import com.dashen.ningbaoqi.factory.net.NetWork;
 import com.dashen.ningbaoqi.factory.net.RemoteService;
+import com.dashen.ningbaoqi.factory.presenter.search.SearchGroupPresenter;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import java.io.IOException;
+import java.util.List;
 
 import project.com.ningbaoqi.factory.data.DataSource;
 import retrofit2.Call;
@@ -95,5 +98,33 @@ public class GroupHelper {
                 callback.onDataNotAvailable(R.string.data_network_error);
             }
         });
+    }
+
+    /**
+     * 搜索的方法
+     *
+     * @param name     搜索的名字
+     * @param callback 搜索完成的回调
+     */
+    public static Call search(String name, final DataSource.Callback<List<GroupCard>> callback) {
+        RemoteService service = NetWork.remote();
+        Call<RspModel<List<GroupCard>>> call = service.groupSearch(name);
+        call.enqueue(new Callback<RspModel<List<GroupCard>>>() {
+            @Override
+            public void onResponse(Call<RspModel<List<GroupCard>>> call, Response<RspModel<List<GroupCard>>> response) {
+                RspModel<List<GroupCard>> rspModel = response.body();
+                if (rspModel.success()) {
+                    callback.onDataLoaded(rspModel.getResult());
+                } else {
+                    Factory.decodeRspCode(rspModel, callback);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RspModel<List<GroupCard>>> call, Throwable t) {
+                callback.onDataNotAvailable(R.string.data_network_error);
+            }
+        });
+        return call;//把当前的调度者返回
     }
 }
