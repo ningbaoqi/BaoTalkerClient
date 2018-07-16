@@ -1,5 +1,6 @@
 package project.com.ningbaoqi.baotalkerclient.fragment.main;
 
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -35,11 +36,11 @@ public class GroupFragment extends PresenterFragment<GroupsContract.Presenter> i
     @Override
     protected void initWidget(View root) {
         super.initWidget(root);
-        mRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecycler.setLayoutManager(new GridLayoutManager(getContext(), 2));
         mRecycler.setAdapter(mAdapter = new RecyclerAdapter<Group>() {
             @Override
             protected int getItemViewType(int position, Group group) {//返回cell的布局ID
-                return R.layout.cell_contact_list;
+                return R.layout.cell_group_list;
             }
 
             @Override
@@ -57,6 +58,15 @@ public class GroupFragment extends PresenterFragment<GroupsContract.Presenter> i
         //初始化占位布局
         mEmptyView.bind(mRecycler);
         setPlaceHolderView(mEmptyView);
+    }
+
+    /**
+     * 第一次初始化的时候进行首次数据加载
+     */
+    @Override
+    protected void initFirstData() {
+        super.initFirstData();
+        mPresenter.start();
     }
 
     @Override
@@ -81,6 +91,8 @@ public class GroupFragment extends PresenterFragment<GroupsContract.Presenter> i
         TextView mName;
         @BindView(R.id.txt_desc)
         TextView mDesc;
+        @BindView(R.id.txt_member)
+        TextView mMember;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -96,6 +108,11 @@ public class GroupFragment extends PresenterFragment<GroupsContract.Presenter> i
             mPortraitView.setup(Glide.with(GroupFragment.this), group.getPicture());
             mName.setText(group.getName());
             mDesc.setText(group.getDesc());
+            if (group.holder != null && group.holder instanceof String) {
+                mMember.setText((String) group.holder);
+            } else {
+                mMember.setText("");
+            }
         }
     }
 }
