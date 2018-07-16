@@ -3,6 +3,9 @@ package com.dashen.ningbaoqi.factory.presenter.message;
 import com.dashen.ningbaoqi.factory.model.db.Group;
 import com.dashen.ningbaoqi.factory.model.db.Message;
 import com.dashen.ningbaoqi.factory.model.db.User;
+import com.dashen.ningbaoqi.factory.model.db.view.MemberUserModel;
+
+import java.util.List;
 
 import project.com.ningbaoqi.factory.presenter.BaseContract;
 
@@ -36,6 +39,8 @@ public class ChatContract {
      * 群聊天的界面
      */
     public interface GroupView extends View<Group> {
+        void showAdminOption(boolean isAdmin);//显示是否是管理员
 
+        void onInitGroupMembers(List<MemberUserModel> members, int moreCount);//初始化成员
     }
 }

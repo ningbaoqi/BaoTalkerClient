@@ -1,6 +1,7 @@
 package project.com.ningbaoqi.baotalkerclient.fragment.message;
 
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -10,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewStub;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -51,6 +53,19 @@ public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatCont
     protected Adapter mAdapter;
 
     @Override
+    protected final int getContentLayoutId() {
+        return R.layout.fragment_chat_common;
+    }
+
+    /**
+     * 得到顶部布局的ID资源
+     *
+     * @return
+     */
+    @LayoutRes
+    protected abstract int getHeaderLayoutId();
+
+    @Override
     protected void initArgs(Bundle bundle) {
         super.initArgs(bundle);
         mReceiverId = bundle.getString(MessageActivity.KEY_RECEIVER_ID);
@@ -58,6 +73,9 @@ public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatCont
 
     @Override
     protected void initWidget(View root) {
+        ViewStub stub = root.findViewById(R.id.view_stub_header);//拿到占位布局;然后替换顶部布局，一定需要发生再Super之前，防止控件绑定异常
+        stub.setLayoutResource(getHeaderLayoutId());
+        stub.inflate();
         super.initWidget(root);
         initToolBar();
         initAppBar();
