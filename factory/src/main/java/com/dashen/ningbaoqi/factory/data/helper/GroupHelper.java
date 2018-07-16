@@ -127,4 +127,11 @@ public class GroupHelper {
         });
         return call;//把当前的调度者返回
     }
+
+    /**
+     * 刷新我的群组
+     */
+    public static void refreshGroups() {
+
+    }
 }
