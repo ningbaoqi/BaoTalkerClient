@@ -12,7 +12,7 @@
     android:outlineProvider="background"
     tools:targetApi="lollipop">
 
-    <net.qiujuer.italker.common.widget.PortraitView
+    <project.com.ningbaoqi.common.widget.a.PortraitView
         android:id="@+id/im_portrait"
         android:layout_width="@dimen/portraitMaxSize"
         android:layout_height="@dimen/portraitMaxSize"
