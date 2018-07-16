@@ -120,8 +120,7 @@ public class MainActivity extends Activity implements BottomNavigationView.OnNav
     @OnClick(R.id.btn_action)
     void onActionClick() {
         if (Objects.equals(mNavHelper.getCurrentTab().extra, R.string.title_group)) {//打开群创建界面
-            // TODO 打开群创建界面
-
+            GroupCreateActivity.show(this);
         } else {
             SearchActivity.show(this, SearchActivity.TYPE_USER);
         }
