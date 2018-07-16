@@ -66,6 +66,13 @@ public class SearchUserFragment extends PresenterFragment<SearchContract.Present
     }
 
     @Override
+    protected void initData() {
+        super.initData();
+        // 发起首次搜索
+        search("");
+    }
+
+    @Override
     public void search(String content) {
         mPresenter.search(content);
     }
