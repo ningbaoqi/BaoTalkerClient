@@ -20,7 +20,8 @@
             <ViewStub
                 android:id="@+id/view_stub_header"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed|snap" />
         </android.support.design.widget.AppBarLayout>
 
         <android.support.v7.widget.RecyclerView
