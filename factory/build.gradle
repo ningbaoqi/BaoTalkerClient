@@ -45,4 +45,5 @@ dependencies {
     implementation "com.github.Raizlabs.DBFlow:dbflow:${rootProject.ext.dbflowVersion}"
     implementation "com.android.support:recyclerview-v7:$rootProject.ext.supportVersion"
     implementation "com.github.bumptech.glide:glide:$rootProject.ext.glideVersion"
+    implementation "com.android.support:appcompat-v7:$rootProject.ext.supportVersion"
 }
