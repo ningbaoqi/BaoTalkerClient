@@ -2,12 +2,19 @@ package project.com.ningbaoqi.face;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ImageSpan;
 import android.util.ArrayMap;
 import android.view.View;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 
@@ -168,8 +175,16 @@ public class Face {
      * @param bean
      * @param size
      */
-    public static void inputFace(@NonNull Context context, final Editable editable, final Face.Bean bean, int size) {
-
+    public static void inputFace(@NonNull final Context context, final Editable editable, final Face.Bean bean, int size) {
+        Glide.with(context).load(bean.preview).asBitmap().into(new SimpleTarget<Bitmap>(size, size) {
+            @Override
+            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                Spannable spannable = new SpannableString(String.format("[%s]", bean.key));
+                ImageSpan span = new ImageSpan(context, resource, ImageSpan.ALIGN_BASELINE);
+                spannable.setSpan(span, 0, spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);//属性为前后不关联
+                editable.append(spannable);
+            }
+        });
     }
 
     /**
