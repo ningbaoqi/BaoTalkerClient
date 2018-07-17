@@ -214,7 +214,7 @@ public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatCont
      */
     @Override
     public void onRecordDone(File file, long time) {
-        // TODO
+        mPresenter.pushAudio(file.getAbsolutePath());
     }
 
     /**
