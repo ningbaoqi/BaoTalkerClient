@@ -23,7 +23,10 @@ import com.dashen.ningbaoqi.factory.model.db.Message;
 import com.dashen.ningbaoqi.factory.model.db.User;
 import com.dashen.ningbaoqi.factory.persistence.Account;
 import com.dashen.ningbaoqi.factory.presenter.message.ChatContract;
+import com.dashen.ningbaoqi.factory.utils.FileCache;
 
+import net.qiujuer.genius.kit.handler.Run;
+import net.qiujuer.genius.kit.handler.runable.Action;
 import net.qiujuer.genius.ui.Ui;
 import net.qiujuer.genius.ui.compat.UiCompat;
 import net.qiujuer.genius.ui.widget.Loading;
@@ -38,7 +41,9 @@ import butterknife.OnClick;
 import project.com.ningbaoqi.baotalkerclient.R;
 import project.com.ningbaoqi.baotalkerclient.activities.MessageActivity;
 import project.com.ningbaoqi.baotalkerclient.fragment.panel.PanelFragment;
+import project.com.ningbaoqi.common.app.Application;
 import project.com.ningbaoqi.common.app.PresenterFragment;
+import project.com.ningbaoqi.common.tools.AudioPlayHelper;
 import project.com.ningbaoqi.common.widget.a.PortraitView;
 import project.com.ningbaoqi.common.widget.adapter.TextWatcherAdapter;
 import project.com.ningbaoqi.common.widget.recycler.RecyclerAdapter;
@@ -61,7 +66,8 @@ public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatCont
     protected Adapter mAdapter;
     private AirPanel.Boss mPanelBoss;//控制底部面板与软件盘过渡的Boss控件
     private PanelFragment mPanelFragment;
-
+    private FileCache<AudioHolder> mAudioFileCache;
+    private AudioPlayHelper<AudioHolder> mAudioPlayer;
 
     @Override
     protected final int getContentLayoutId() {
@@ -104,6 +110,16 @@ public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatCont
         mRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new Adapter();
         mRecycler.setAdapter(mAdapter);
+        //添加适配器监听器
+        mAdapter.setListener(new RecyclerAdapter.AdapterListenerImpl<Message>() {
+            @Override
+            public void onItemClick(RecyclerAdapter.ViewHolder holder, Message message) {
+                if (message.getType() == Message.TYPE_AUDIO && holder instanceof ChatFragment.AudioHolder) {
+                    //权限的判断，当然权限已经全局申请了
+                    mAudioFileCache.download((AudioHolder) holder, message.getContent());
+                }
+            }
+        });
     }
 
     @Override
@@ -142,6 +158,51 @@ public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatCont
                 mSubmit.setActivated(needSendMsg);
             }
         });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        //进入界面的时候就进行初始化
+        mAudioPlayer = new AudioPlayHelper<>(new AudioPlayHelper.RecordPlayListener<AudioHolder>() {
+            @Override
+            public void onPlayStart(AudioHolder audioHolder) {
+                audioHolder.onPlayStart();
+            }
+
+            @Override
+            public void onPlayStop(AudioHolder audioHolder) {
+                audioHolder.onPlayStop();
+            }
+
+            @Override
+            public void onPlayError(AudioHolder audioHolder) {
+                Application.showToast(R.string.toast_audio_play_error);
+            }
+        });
+        //下载工具类
+        mAudioFileCache = new FileCache<>("audio/cache", "mp3", new FileCache.CacheListener<AudioHolder>() {
+            @Override
+            public void onDownloadSucceed(final AudioHolder holder, final File file) {
+                Run.onUiAsync(new Action() {
+                    @Override
+                    public void call() {
+                        mAudioPlayer.trigger(holder, file.getAbsolutePath());//主线程播放
+                    }
+                });
+            }
+
+            @Override
+            public void onDownloadFailed(AudioHolder holder) {
+                Application.showToast(R.string.toast_download_error);
+            }
+        });
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mAudioPlayer.destroy();
     }
 
     @Override

@@ -58,4 +58,5 @@ dependencies {
     implementation "com.github.Raizlabs.DBFlow:dbflow-core:${rootProject.ext.dbflowVersion}"
     implementation "com.github.Raizlabs.DBFlow:dbflow:${rootProject.ext.dbflowVersion}"
     implementation "net.qiujuer.widget:airpanel:$rootProject.ext.airpanelVersion"//空气面板
+    implementation "net.qiujuer.genius:kit-handler:$rootProject.ext.geniusVersion"
 }
