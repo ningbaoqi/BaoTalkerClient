@@ -214,7 +214,7 @@ public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatCont
      */
     @Override
     public void onRecordDone(File file, long time) {
-        mPresenter.pushAudio(file.getAbsolutePath());
+        mPresenter.pushAudio(file.getAbsolutePath(), time);
     }
 
     /**
@@ -330,6 +330,10 @@ public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatCont
      * 语音的Holder
      */
     class AudioHolder extends BaseHolder {
+        @BindView(R.id.txt_content)
+        TextView mContent;
+        @BindView(R.id.im_audio_track)
+        ImageView mAudioTrack;
 
         public AudioHolder(View itemView) {
             super(itemView);
@@ -338,7 +342,28 @@ public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatCont
         @Override
         protected void onBind(Message message) {
             super.onBind(message);
-            // TODO
+            String attach = TextUtils.isEmpty(message.getAttach()) ? "0" : message.getAttach();
+            mContent.setText(formatTime(attach));
+        }
+
+        void onPlayStart() {
+            mAudioTrack.setVisibility(View.VISIBLE);
+        }
+
+        void onPlayStop() {
+            mAudioTrack.setVisibility(View.INVISIBLE);
+        }
+
+        private String formatTime(String attach) {
+            float time;
+            try {
+                time = Float.parseFloat(attach) / 1000f;//转换成s
+            } catch (Exception e) {
+                time = 0;
+            }
+            String shortTime = String.valueOf(Math.round(time * 10) / 10f);//取整到一位小数
+            shortTime = shortTime.replaceAll("[.]0+?$|0+?$", "");//去除小数位数为0的情况
+            return String.format("%s’", shortTime);
         }
     }
 

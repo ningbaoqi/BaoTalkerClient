@@ -150,8 +150,11 @@ public class MessageHelper {
      * @return
      */
     private static String uploadAudio(String content) {
-        //TODO
-        return null;
+        File file = new File(content);
+        if (!file.exists() || file.length() <= 0) {
+            return null;
+        }
+        return UploadHelper.uploadAudio(content);
     }
 
     /**

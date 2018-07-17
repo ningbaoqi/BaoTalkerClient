@@ -17,7 +17,7 @@ public class ChatContract {
     public interface Presenter extends BaseContract.Presenter {
         void pushText(String content);//发送文字
 
-        void pushAudio(String path);//发送语音
+        void pushAudio(String path, long time);//发送语音
 
         void pushImages(String[] paths);//发送图片
 
