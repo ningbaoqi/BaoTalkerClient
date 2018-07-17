@@ -44,4 +44,5 @@ dependencies {
     //空气面板
     implementation project(':face-res')
     implementation "com.google.code.gson:gson:$rootProject.ext.gsonVersion"
+    implementation "net.qiujuer.lame:lame:$rootProject.ext.lameVersion"
 }
