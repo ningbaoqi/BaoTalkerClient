@@ -8,10 +8,23 @@ import android.text.Spannable;
 import android.util.ArrayMap;
 import android.view.View;
 
+import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+
+import project.com.ningbaoqi.utils.StreamUtil;
 
 /**
  * 表情工具类
@@ -43,8 +56,77 @@ public class Face {
         }
     }
 
+    /**
+     * 从face-t.zip包解析我们的表情
+     *
+     * @param context
+     * @return
+     */
     private static FaceTab initAssetsFace(Context context) {
-        return null;
+        String faceAsset = "face-t.zip";
+        String faceCacheDir = String.format("%s/face/tf", context.getFilesDir());//data/data/包名/files/face/tf/*
+        File faceFolder = new File(faceCacheDir);
+        if (!faceFolder.exists()) {
+            if (faceFolder.mkdirs()) {
+                try {
+                    InputStream inputStream = context.getAssets().open(faceAsset);
+                    //存储的文件
+                    File faceSource = new File(faceFolder, "source.zip");
+                    StreamUtil.copy(inputStream, faceSource);
+                    //解压
+                    unZipFile(faceSource, faceFolder);
+                    //清理文件
+                    StreamUtil.delete(faceSource.getAbsolutePath());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        //找到info.json文件
+        File infoFile = new File(faceCacheDir, "info.json");
+        //Gson解析
+        Gson gson = new Gson();
+        JsonReader reader = null;
+        try {
+            reader = gson.newJsonReader(new FileReader(infoFile));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+        FaceTab tab = gson.fromJson(reader, FaceTab.class);//解析
+        for (Bean face : tab.faces) {//相对路径到绝对路径
+            face.preview = String.format("%s/%s", faceCacheDir, face.preview);
+            face.source = String.format("%s/%s", faceCacheDir, face.source);
+        }
+        return tab;
+    }
+
+    /**
+     * 解压文件
+     *
+     * @param zipFile
+     * @param desDir
+     */
+    private static void unZipFile(File zipFile, File desDir) throws IOException {
+        final String folderPath = desDir.getAbsolutePath();
+        ZipFile zf = new ZipFile(zipFile);
+        //判断节点进行循环
+        for (Enumeration<?> entries = zf.entries(); entries.hasMoreElements(); ) {
+            ZipEntry entry = (ZipEntry) entries.nextElement();
+            //过滤缓存文件
+            String name = entry.getName();
+            if (name.startsWith(".")) {
+                continue;
+            }
+            //输入流
+            InputStream in = zf.getInputStream(entry);
+            String str = folderPath + File.separator + name;
+            //防止名字错乱
+            str = new String(str.getBytes("8859_1"), "GB2312");
+            File desFile = new File(str);
+            //输出文件
+            StreamUtil.copy(in, desFile);
+        }
     }
 
     private static FaceTab initResourceFace(Context context) {//从drawable资源中加载数据，并映射到对应的key
