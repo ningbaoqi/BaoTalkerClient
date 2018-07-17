@@ -22,7 +22,7 @@ import project.com.ningbaoqi.utils.HashUtil;
  * 上传工具类，用于上传任何文件到阿里OSS存储
  */
 public class UploadHelper {
-    private static final String ENDPOINT = "http://oss-cn-beijing.aliyuncs.com";//与OSS上的存储区域有关系
+    public static final String ENDPOINT = "http://oss-cn-beijing.aliyuncs.com";//与OSS上的存储区域有关系
     private static final String BUCKET_NAME = "baotalk";//上传到仓库名
     private static final String TAG = "nbq";
 

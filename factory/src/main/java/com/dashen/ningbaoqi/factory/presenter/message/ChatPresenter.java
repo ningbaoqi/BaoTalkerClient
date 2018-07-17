@@ -36,9 +36,20 @@ public class ChatPresenter<View extends ChatContract.View> extends BaseSourcePre
         // TODO 发送语音
     }
 
+    /**
+     * 发送图片
+     *
+     * @param paths 此时路径是本地手机上的路径
+     */
     @Override
     public void pushImages(String[] paths) {
-        // TODO 发送图片
+        if (paths == null || paths.length == 0) {
+            return;
+        }
+        for (String path : paths) {
+            MsgCreateModel model = new MsgCreateModel.Builder().receiver(mReceiverId, mReceiverType).content(path, Message.TYPE_PIC).build();
+            MessageHelper.push(model);
+        }
     }
 
     @Override
