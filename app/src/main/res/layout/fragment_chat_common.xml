@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project.com.ningbaoqi.common.widget.a.MessageLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/lay_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -89,4 +90,19 @@
             android:src="@drawable/ic_submit"
             android:tint="@color/textPrimary" />
     </LinearLayout>
+
+    <!--ID必须是固定的-->
+    <net.qiujuer.widget.airpanel.AirPanelFrameLayout
+        android:id="@id/airPanelSubLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/grey_300"
+        android:visibility="gone">
+
+        <fragment
+            android:id="@+id/frag_panel"
+            class="project.com.ningbaoqi.baotalkerclient.fragment.panel.PanelFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </net.qiujuer.widget.airpanel.AirPanelFrameLayout>
 </project.com.ningbaoqi.common.widget.a.MessageLayout>

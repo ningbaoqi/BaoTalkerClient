@@ -6,9 +6,10 @@ import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
-import android.widget.LinearLayout;
 
-public class MessageLayout extends LinearLayout {
+import net.qiujuer.widget.airpanel.AirPanelLinearLayout;
+
+public class MessageLayout extends AirPanelLinearLayout {
     public MessageLayout(Context context) {
         super(context);
     }

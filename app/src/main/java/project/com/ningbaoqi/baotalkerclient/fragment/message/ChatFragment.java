@@ -24,6 +24,8 @@ import com.dashen.ningbaoqi.factory.presenter.message.ChatContract;
 
 import net.qiujuer.genius.ui.compat.UiCompat;
 import net.qiujuer.genius.ui.widget.Loading;
+import net.qiujuer.widget.airpanel.AirPanel;
+import net.qiujuer.widget.airpanel.Util;
 
 import java.util.Objects;
 
@@ -31,6 +33,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import project.com.ningbaoqi.baotalkerclient.R;
 import project.com.ningbaoqi.baotalkerclient.activities.MessageActivity;
+import project.com.ningbaoqi.baotalkerclient.fragment.panel.PanelFragment;
 import project.com.ningbaoqi.common.app.PresenterFragment;
 import project.com.ningbaoqi.common.widget.a.PortraitView;
 import project.com.ningbaoqi.common.widget.adapter.TextWatcherAdapter;
@@ -51,6 +54,9 @@ public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatCont
     @BindView(R.id.btn_submit)
     ImageView mSubmit;
     protected Adapter mAdapter;
+    private AirPanel.Boss mPanelBoss;//控制底部面板与软件盘过渡的Boss控件
+    private PanelFragment mPanelFragment;
+
 
     @Override
     protected final int getContentLayoutId() {
@@ -77,6 +83,15 @@ public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatCont
         stub.setLayoutResource(getHeaderLayoutId());
         stub.inflate();
         super.initWidget(root);
+        //初始化面板操作
+        mPanelBoss = root.findViewById(R.id.lay_content);
+        mPanelBoss.setup(new AirPanel.PanelListener() {
+            @Override
+            public void requestHideSoftKeyboard() {//请求隐藏软件盘
+                Util.hideKeyboard(mContent);
+            }
+        });
+        mPanelFragment = (PanelFragment) getChildFragmentManager().findFragmentById(R.id.frag_panel);
         initToolBar();
         initAppBar();
         initEditContent();
@@ -130,12 +145,14 @@ public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatCont
 
     @OnClick(R.id.btn_face)
     void onFaceClick() {
-        // TODO
+        mPanelBoss.openPanel();//仅仅只需要打开即可
+        mPanelFragment.showFace();
     }
 
     @OnClick(R.id.btn_record)
     void onRecordClick() {
-        // TODO
+        mPanelBoss.openPanel();//仅仅只需要打开即可
+        mPanelFragment.showRecord();
     }
 
     @OnClick(R.id.btn_submit)
@@ -154,7 +171,8 @@ public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatCont
      * 打开更多
      */
     private void onMoreClick() {
-        // TODO
+        mPanelBoss.openPanel();//仅仅只需要打开即可
+        mPanelFragment.showGallery();
     }
 
     @Override

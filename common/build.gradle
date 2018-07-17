@@ -40,5 +40,5 @@ dependencies {
     implementation "com.android.support:recyclerview-v7:$rootProject.ext.supportVersion"
     implementation "net.qiujuer.genius:kit-handler:$rootProject.ext.geniusVersion"
     implementation project(':lang')
-
+    implementation "net.qiujuer.widget:airpanel:$rootProject.ext.airpanelVersion"//空气面板
 }
