@@ -1,6 +1,7 @@
 package project.com.ningbaoqi.face;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.Spannable;
@@ -8,7 +9,9 @@ import android.util.ArrayMap;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * 表情工具类
@@ -16,6 +19,53 @@ import java.util.List;
 public class Face {
 
     private static final ArrayMap<String, Bean> FACE_MAP = new ArrayMap<>();//全局的表情的映射，使用ArrayMap更加轻量级
+    private static List<FaceTab> FACE_TABS = null;
+
+    private static void init(Context context) {
+        if (FACE_TABS == null) {
+            synchronized (Face.class) {
+                if (FACE_TABS == null) {
+                    ArrayList<FaceTab> faceTabs = new ArrayList<>();
+                    FaceTab tab = initResourceFace(context);
+                    if (tab != null) {
+                        faceTabs.add(tab);
+                    }
+                    tab = initAssetsFace(context);
+                    if (tab != null) {
+                        faceTabs.add(tab);
+                    }
+                    for (FaceTab faceTab : faceTabs) {
+                        faceTab.copyToMap(FACE_MAP);
+                    }
+                    FACE_TABS = Collections.unmodifiableList(faceTabs);//不可变集合不可以添加删除
+                }
+            }
+        }
+    }
+
+    private static FaceTab initAssetsFace(Context context) {
+        return null;
+    }
+
+    private static FaceTab initResourceFace(Context context) {//从drawable资源中加载数据，并映射到对应的key
+        final ArrayList<Bean> faces = new ArrayList<>();
+        final Resources resources = context.getResources();
+        String packageName = context.getApplicationInfo().packageName;
+        for (int i = 1; i <= 142; i++) {
+            String key = String.format(Locale.ENGLISH, "fb%3d", i);
+            String resStr = String.format(Locale.ENGLISH, "face_base_%03d", i);
+            //根据资源名称去拿资源对应的ID
+            int resId = resources.getIdentifier(resStr, "drawable", packageName);
+            if (resId == 0) {
+                continue;
+            }
+            faces.add(new Bean(key, resId));//添加表情
+        }
+        if (faces.size() == 0) {
+            return null;
+        }
+        return new FaceTab("NAME", faces.get(0).preview, faces);
+    }
 
     /**
      * 获取所有的表情
@@ -24,7 +74,8 @@ public class Face {
      * @return
      */
     public static List<FaceTab> all(@NonNull Context context) {
-        return null;
+        init(context);
+        return FACE_TABS;
     }
 
     /**
@@ -57,16 +108,34 @@ public class Face {
     public static class FaceTab {
         public List<Bean> faces = new ArrayList<>();
         public String name;
-        public Object preview;//预览图;包括drawable下面的int类型
+        Object preview;//预览图;包括drawable下面的int类型
+
+        FaceTab(String name, Object preview, List<Bean> faces) {
+            this.faces = faces;
+            this.name = name;
+            this.preview = preview;
+        }
+
+        void copyToMap(ArrayMap<String, Bean> faceMap) {//添加到Map中
+            for (Bean face : faces) {
+                faceMap.put(face.key, face);
+            }
+        }
     }
 
     /**
      * 每一个表情
      */
     public static class Bean {
-        public static String key;
-        public static Object source;
-        public static Object preview;
-        public static String desc;
+        public String key;
+        public Object source;
+        public Object preview;
+        public String desc;
+
+        Bean(String key, int preview) {
+            this.key = key;
+            this.preview = preview;
+            this.source = preview;
+        }
     }
 }
