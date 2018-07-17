@@ -30,6 +30,7 @@ import net.qiujuer.genius.ui.widget.Loading;
 import net.qiujuer.widget.airpanel.AirPanel;
 import net.qiujuer.widget.airpanel.Util;
 
+import java.io.File;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -196,6 +197,27 @@ public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatCont
     }
 
     /**
+     * 图片的回调
+     *
+     * @param paths
+     */
+    @Override
+    public void onSendGallery(String[] paths) {
+        mPresenter.pushImages(paths);
+    }
+
+    /**
+     * 语音的回调
+     *
+     * @param file
+     * @param time
+     */
+    @Override
+    public void onRecordDone(File file, long time) {
+        // TODO
+    }
+
+    /**
      * 内容的适配器
      */
     private class Adapter extends RecyclerAdapter<Message> {
@@ -324,6 +346,9 @@ public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatCont
      * 图片的Holder
      */
     class PicHolder extends BaseHolder {
+        @BindView(R.id.im_image)
+        ImageView mContent;
+
         public PicHolder(View itemView) {
             super(itemView);
         }
@@ -331,7 +356,8 @@ public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatCont
         @Override
         protected void onBind(Message message) {
             super.onBind(message);
-            // TODO
+            String content = message.getContent();//具体的地址
+            Glide.with(ChatFragment.this).load(content).fitCenter().into(mContent);
         }
     }
 }

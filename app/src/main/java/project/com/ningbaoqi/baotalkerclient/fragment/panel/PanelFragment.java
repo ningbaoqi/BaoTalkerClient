@@ -12,14 +12,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import net.qiujuer.genius.ui.Ui;
 
+import java.io.File;
 import java.util.List;
 
 import project.com.ningbaoqi.baotalkerclient.R;
 import project.com.ningbaoqi.common.app.Fragment;
 import project.com.ningbaoqi.common.tools.UiTool;
+import project.com.ningbaoqi.common.widget.a.GalleryView;
 import project.com.ningbaoqi.common.widget.recycler.RecyclerAdapter;
 import project.com.ningbaoqi.face.Face;
 
@@ -28,7 +31,7 @@ import project.com.ningbaoqi.face.Face;
  */
 public class PanelFragment extends Fragment {
     private PanelCallback mCallback;
-
+    private View mFacePanel, mGalleryPanel, mRecordPanel;
 
     @Override
     protected int getContentLayoutId() {
@@ -52,8 +55,13 @@ public class PanelFragment extends Fragment {
         this.mCallback = callback;
     }
 
+    /**
+     * 初始化表情
+     *
+     * @param root
+     */
     private void initFace(final View root) {
-        final View facePanel = root.findViewById(R.id.lay_panel_face);
+        final View facePanel = mFacePanel = root.findViewById(R.id.lay_panel_face);
         View backSpace = facePanel.findViewById(R.id.im_backspace);
         backSpace.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,24 +144,71 @@ public class PanelFragment extends Fragment {
         });
     }
 
+    /**
+     * 初始化语音
+     *
+     * @param root
+     */
     private void initRecord(View root) {
 
     }
 
+    /**
+     * 初始化画廊
+     *
+     * @param root
+     */
     private void initGallery(View root) {
+        final View galleryPanel = mGalleryPanel = root.findViewById(R.id.lay_gallery_panel);
+        final GalleryView galleryView = galleryPanel.findViewById(R.id.view_gallery);
+        final TextView selectedSize = galleryPanel.findViewById(R.id.txt_gallery_select_count);
 
+        galleryView.setUp(getLoaderManager(), new GalleryView.SelectedChangedListener() {
+            @Override
+            public void onSelectedCountChanged(int count) {
+                selectedSize.setText(String.format(getText(R.string.label_gallery_selected_size).toString(), count));
+            }
+        });
+        galleryPanel.findViewById(R.id.btn_send).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onGallerySendClick(galleryView, galleryView.getSelectImagePath());
+            }
+        });
+    }
+
+    /**
+     * 点击的时候触发
+     *
+     * @param galleryView
+     * @param paths
+     */
+    private void onGallerySendClick(GalleryView galleryView, String[] paths) {
+        //通知给聊天界面
+        galleryView.clear();
+        PanelCallback callback = mCallback;
+        if (callback == null) {
+            return;
+        }
+        callback.onSendGallery(paths);
     }
 
     public void showFace() {
-
+        //mRecordPanel.setVisibility(View.GONE);
+        mGalleryPanel.setVisibility(View.GONE);
+        mFacePanel.setVisibility(View.VISIBLE);
     }
 
     public void showRecord() {
-
+//mRecordPanel.setVisibility(View.VISIBLE);
+        mGalleryPanel.setVisibility(View.GONE);
+        mFacePanel.setVisibility(View.GONE);
     }
 
     public void showGallery() {
-
+//mRecordPanel.setVisibility(View.GONE);
+        mGalleryPanel.setVisibility(View.VISIBLE);
+        mFacePanel.setVisibility(View.GONE);
     }
 
     /**
@@ -161,5 +216,9 @@ public class PanelFragment extends Fragment {
      */
     public interface PanelCallback {
         EditText getInputEditText();
+
+        void onSendGallery(String[] paths);//返回需要发送的图片
+
+        void onRecordDone(File file, long time);//返回录音文件和时长
     }
 }
