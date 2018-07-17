@@ -39,7 +39,7 @@ import project.com.ningbaoqi.common.widget.a.PortraitView;
 import project.com.ningbaoqi.common.widget.adapter.TextWatcherAdapter;
 import project.com.ningbaoqi.common.widget.recycler.RecyclerAdapter;
 
-public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatContract.Presenter> implements AppBarLayout.OnOffsetChangedListener, ChatContract.View<InitModel> {
+public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatContract.Presenter> implements AppBarLayout.OnOffsetChangedListener, ChatContract.View<InitModel>, PanelFragment.PanelCallback {
     protected String mReceiverId;
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -92,6 +92,7 @@ public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatCont
             }
         });
         mPanelFragment = (PanelFragment) getChildFragmentManager().findFragmentById(R.id.frag_panel);
+        mPanelFragment.setUp(this);
         initToolBar();
         initAppBar();
         initEditContent();
@@ -183,6 +184,11 @@ public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatCont
     @Override
     public void onAdapterDataChanged() {
         //界面没有占位布局，Recycler是一直显示的所以不需要做任何事情
+    }
+
+    @Override
+    public EditText getInputEditText() {
+        return mContent;//返回输入框
     }
 
     /**
