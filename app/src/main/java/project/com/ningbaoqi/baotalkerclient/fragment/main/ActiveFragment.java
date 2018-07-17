@@ -2,6 +2,8 @@ package project.com.ningbaoqi.baotalkerclient.fragment.main;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
@@ -20,6 +22,7 @@ import project.com.ningbaoqi.common.app.PresenterFragment;
 import project.com.ningbaoqi.common.widget.EmptyView;
 import project.com.ningbaoqi.common.widget.a.PortraitView;
 import project.com.ningbaoqi.common.widget.recycler.RecyclerAdapter;
+import project.com.ningbaoqi.face.Face;
 import project.com.ningbaoqi.utils.DateTimeUtil;
 
 
@@ -113,7 +116,10 @@ public class ActiveFragment extends PresenterFragment<SessionContract.Presenter>
         protected void onBind(Session session) {
             mPortraitView.setup(Glide.with(ActiveFragment.this), session.getPicture());
             mName.setText(session.getTitle());
-            mContent.setText(TextUtils.isEmpty(session.getContent()) ? "" : session.getContent());
+            String str = TextUtils.isEmpty(session.getContent()) ? "" : session.getContent();
+            Spannable spannable = new SpannableString(str);
+            Face.decode(mContent, spannable, (int) mContent.getTextSize());
+            mContent.setText(spannable);
             mTime.setText(DateTimeUtil.getSimpleTime(session.getModifyAt()));
         }
     }

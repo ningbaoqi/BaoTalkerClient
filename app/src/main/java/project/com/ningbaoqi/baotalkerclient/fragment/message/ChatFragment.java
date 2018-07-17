@@ -9,6 +9,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewStub;
@@ -22,6 +24,7 @@ import com.dashen.ningbaoqi.factory.model.db.User;
 import com.dashen.ningbaoqi.factory.persistence.Account;
 import com.dashen.ningbaoqi.factory.presenter.message.ChatContract;
 
+import net.qiujuer.genius.ui.Ui;
 import net.qiujuer.genius.ui.compat.UiCompat;
 import net.qiujuer.genius.ui.widget.Loading;
 import net.qiujuer.widget.airpanel.AirPanel;
@@ -38,6 +41,7 @@ import project.com.ningbaoqi.common.app.PresenterFragment;
 import project.com.ningbaoqi.common.widget.a.PortraitView;
 import project.com.ningbaoqi.common.widget.adapter.TextWatcherAdapter;
 import project.com.ningbaoqi.common.widget.recycler.RecyclerAdapter;
+import project.com.ningbaoqi.face.Face;
 
 public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatContract.Presenter> implements AppBarLayout.OnOffsetChangedListener, ChatContract.View<InitModel>, PanelFragment.PanelCallback {
     protected String mReceiverId;
@@ -293,7 +297,10 @@ public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatCont
         @Override
         protected void onBind(Message message) {
             super.onBind(message);
-            mContent.setText(message.getContent());//把内容设置到布局上
+            Spannable spannable = new SpannableString(message.getContent());
+            Face.decode(mContent, spannable, (int) Ui.dipToPx(getResources(), 20));//解析表情
+            mContent.setText(spannable);//把内容设置到布局上
+
         }
     }
 
