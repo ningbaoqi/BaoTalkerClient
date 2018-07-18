@@ -206,6 +206,15 @@ public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatCont
     }
 
     @Override
+    public boolean onBackPress() {
+        if (mPanelBoss.isOpen()) {
+            mPanelBoss.closePanel();
+            return true;
+        }
+        return super.onBackPress();
+    }
+
+    @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
 
     }
