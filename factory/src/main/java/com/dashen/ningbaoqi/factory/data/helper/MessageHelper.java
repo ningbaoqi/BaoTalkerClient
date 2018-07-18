@@ -79,6 +79,7 @@ public class MessageHelper {
                         if (TextUtils.isEmpty(content)) {
                             card.setStatus(Message.STATUS_FAILED);//失败
                             Factory.getMessageCenter().dispatch(card);
+                            return;
                         }
                         card.setContent(content);//成功则把网络路径进行替换
                         Factory.getMessageCenter().dispatch(card);
