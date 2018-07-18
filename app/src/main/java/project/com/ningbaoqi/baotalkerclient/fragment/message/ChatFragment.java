@@ -102,6 +102,21 @@ public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatCont
                 Util.hideKeyboard(mContent);
             }
         });
+        mPanelBoss.setOnStateChangedListener(new AirPanel.OnStateChangedListener() {
+            @Override
+            public void onPanelStateChanged(boolean isOpen) {//面板的状态改变
+                if (isOpen) {
+                    onBottomPanelOpened();
+                }
+            }
+
+            @Override
+            public void onSoftKeyboardStateChanged(boolean isOpen) {//软件盘的状态改变
+                if (isOpen) {
+                    onBottomPanelOpened();
+                }
+            }
+        });
         mPanelFragment = (PanelFragment) getChildFragmentManager().findFragmentById(R.id.frag_panel);
         mPanelFragment.setUp(this);
         initToolBar();
@@ -203,6 +218,12 @@ public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatCont
     public void onDestroy() {
         super.onDestroy();
         mAudioPlayer.destroy();
+    }
+
+    private void onBottomPanelOpened() {//当底部面板或者软件盘打开时触发
+        if (mAppBarLayout != null) {
+            mAppBarLayout.setExpanded(false, true);
+        }
     }
 
     @Override
